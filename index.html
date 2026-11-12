@@ -808,38 +808,44 @@
       background: #10b981;
       box-shadow: 0 0 6px #10b981;
     }
-    .dev-badge {
+    /* Footer Developer Credit */
+    .app-footer-credit {
+      position: fixed;
+      bottom: 8px;
+      left: 12px;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 20px;
+      padding: 3px 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      font-size: 0.72rem;
+      color: #64748b;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      font-size: 0.78rem;
-      background: rgba(255, 255, 255, 0.16);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.32);
-      padding: 5px 12px;
-      border-radius: 20px;
-      color: rgba(255, 255, 255, 0.95);
-      text-decoration: none;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      gap: 5px;
+      transition: all 0.2s ease;
+      pointer-events: auto;
     }
-    .dev-badge:hover {
-      background: rgba(255, 255, 255, 0.28);
-      color: #ffffff;
-      border-color: rgba(255, 255, 255, 0.6);
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    .app-footer-credit:hover {
+      background: rgba(255, 255, 255, 0.95);
+      border-color: rgba(125, 42, 232, 0.3);
+      box-shadow: 0 4px 14px rgba(125, 42, 232, 0.15);
       transform: translateY(-1px);
     }
-    .dev-badge a {
-      color: #ffffff;
+    .app-footer-credit a {
+      color: var(--canva-purple);
       font-weight: 700;
       text-decoration: none;
       display: inline-flex;
       align-items: center;
-      gap: 5px;
+      gap: 4px;
     }
-    .dev-badge a:hover {
+    .app-footer-credit a:hover {
       text-decoration: underline;
-      text-underline-offset: 3px;
+      text-underline-offset: 2px;
     }
   </style>
 </head>
@@ -885,13 +891,6 @@
     </div>
 
     <div class="header-right">
-      <div class="dev-badge" title="تواصل مع المطور عبر البريد الإلكتروني">
-        <span>تطوير:</span>
-        <a href="mailto:w.a.a2012@gmail.com">
-          <span>عبدالرزاق المعلوي</span>
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-        </a>
-      </div>
       <button class="btn-header primary" id="btnExportPng">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         <span>تنزيل (PNG)</span>
@@ -1076,6 +1075,15 @@
         </button>
       </div>
     </aside>
+  </div>
+
+  <!-- Footer Developer Credit (Fixed Bottom-Left) -->
+  <div class="app-footer-credit" title="تواصل مع المطور عبر البريد الإلكتروني">
+    <span>تطوير:</span>
+    <a href="mailto:w.a.a2012@gmail.com">
+      <span>عبدالرزاق المعلوي</span>
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+    </a>
   </div>
 
   <!-- Toast Notification Bar -->
