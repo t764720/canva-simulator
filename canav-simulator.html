@@ -1,0 +1,3208 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>محرر الرسوم البيانية والإنفوجرافيك - شبيه Canva</title>
+  <style>
+    /* Reset & Base Styles */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    :root {
+      --primary-gradient: linear-gradient(135deg, #00c4cc 0%, #7d2ae8 100%);
+      --canva-purple: #7d2ae8;
+      --canva-teal: #00c4cc;
+      --bg-dark-sidebar: #0e1318;
+      --bg-drawer: #18191b;
+      --bg-drawer-border: #2d2f34;
+      --bg-canvas-area: #ebecf0;
+      --toolbar-bg: #ffffff;
+      --text-main: #0e1318;
+      --text-muted: #5e6573;
+      --text-light: #ffffff;
+      --accent-color: #7d2ae8;
+      --border-color: #e1e3e8;
+      --guide-color: #ff007a;
+      --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Cairo", "Noto Sans Arabic", Tahoma, sans-serif;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background-color: var(--bg-canvas-area);
+      color: var(--text-main);
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Navigation Header */
+    header.top-nav {
+      height: 56px;
+      background: var(--primary-gradient);
+      color: var(--text-light);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+      flex-shrink: 0;
+    }
+    .header-left, .header-center, .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 800;
+      font-size: 1.15rem;
+      letter-spacing: -0.5px;
+    }
+    .brand-badge {
+      background: rgba(255,255,255,0.2);
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+    .project-title-input {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 6px;
+      outline: none;
+      min-width: 220px;
+      text-align: right;
+      transition: all 0.2s;
+    }
+    .project-title-input:focus {
+      background: rgba(255, 255, 255, 0.3);
+      border-color: white;
+      box-shadow: 0 0 0 2px rgba(255,255,255,0.2);
+    }
+    .btn-header {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: white;
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .btn-header:hover {
+      background: rgba(255,255,255,0.25);
+    }
+    .btn-header:active {
+      transform: scale(0.97);
+    }
+    .btn-header.primary {
+      background: white;
+      color: var(--canva-purple);
+      border: none;
+      font-weight: bold;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+    }
+    .btn-header.primary:hover {
+      background: #f4f5f7;
+    }
+    .btn-header.lab-btn {
+      background: #ffcc00;
+      color: #332200;
+      border: none;
+      font-weight: bold;
+    }
+    .btn-header.lab-btn:hover {
+      background: #ffd633;
+    }
+
+    /* Sub Header: Contextual Toolbar */
+    .context-bar {
+      height: 44px;
+      background: var(--toolbar-bg);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      gap: 8px;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+      z-index: 90;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    }
+    .toolbar-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .toolbar-divider {
+      width: 1px;
+      height: 22px;
+      background: var(--border-color);
+      margin: 0 4px;
+    }
+    .tool-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      padding: 5px 8px;
+      cursor: pointer;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      font-family: inherit;
+      font-size: 0.82rem;
+      min-height: 30px;
+      transition: background 0.15s;
+    }
+    .tool-btn:hover {
+      background: #f0f2f5;
+    }
+    .tool-btn.active {
+      background: #e8e2fa;
+      color: var(--canva-purple);
+      border-color: #d1c4f5;
+    }
+    .tool-select, .tool-input {
+      font-family: inherit;
+      font-size: 0.82rem;
+      padding: 4px 8px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      outline: none;
+      background: white;
+      color: var(--text-main);
+    }
+    .tool-color-picker {
+      width: 28px;
+      height: 28px;
+      padding: 0;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      cursor: pointer;
+      background: transparent;
+    }
+
+    /* Main Workspace Layout */
+    .app-body {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Dark Left Sidebar Navigation */
+    nav.app-sidebar {
+      width: 72px;
+      background: var(--bg-dark-sidebar);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 8px;
+      flex-shrink: 0;
+      z-index: 80;
+      transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1), padding 0.25s ease;
+      overflow: hidden;
+      position: relative;
+    }
+    nav.app-sidebar.sidebar-collapsed {
+      width: 0;
+      padding: 0;
+      border: none;
+    }
+    .nav-tab-btn {
+      width: 64px;
+      height: 60px;
+      border-radius: 8px;
+      background: transparent;
+      border: none;
+      color: #949ca8;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      font-family: inherit;
+      font-size: 0.72rem;
+      cursor: pointer;
+      margin-bottom: 4px;
+      transition: all 0.2s;
+    }
+    .nav-tab-btn svg {
+      width: 22px;
+      height: 22px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+    }
+    .nav-tab-btn:hover {
+      color: white;
+      background: rgba(255,255,255,0.06);
+    }
+    .nav-tab-btn.active {
+      color: white;
+      background: #25262c;
+    }
+
+    /* Drawer / Slide-out Panel */
+    aside.drawer-panel {
+      width: 330px;
+      background: var(--bg-drawer);
+      color: var(--text-light);
+      border-inline-end: 1px solid var(--bg-drawer-border);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      z-index: 70;
+      transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden;
+    }
+    aside.drawer-panel.collapsed {
+      width: 0;
+      border: none;
+    }
+    .drawer-header {
+      padding: 16px;
+      border-bottom: 1px solid var(--bg-drawer-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .drawer-header h3 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #f1f2f6;
+    }
+    .drawer-close-btn {
+      background: none;
+      border: none;
+      color: #9ca3af;
+      cursor: pointer;
+      font-size: 1.1rem;
+      padding: 4px;
+      border-radius: 4px;
+    }
+    .drawer-close-btn:hover {
+      color: white;
+      background: rgba(255,255,255,0.1);
+    }
+    .drawer-content {
+      padding: 16px;
+      overflow-y: auto;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .drawer-content::-webkit-scrollbar {
+      width: 6px;
+    }
+    .drawer-content::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.2);
+      border-radius: 3px;
+    }
+
+    /* Drawer Items */
+    .template-card {
+      background: #25262c;
+      border-radius: 8px;
+      padding: 12px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .template-card:hover {
+      border-color: var(--canva-purple);
+      background: #2c2d34;
+      transform: translateY(-2px);
+    }
+    .template-thumb {
+      height: 90px;
+      background: #18191b;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border: 1px dashed #3a3b42;
+    }
+    .template-card h4 {
+      font-size: 0.85rem;
+      color: #fff;
+    }
+    .template-card p {
+      font-size: 0.72rem;
+      color: #9ca3af;
+      line-height: 1.3;
+    }
+
+    .element-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    .element-item-btn {
+      background: #25262c;
+      border: 1px solid #373a40;
+      border-radius: 8px;
+      color: white;
+      padding: 12px 8px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-family: inherit;
+      font-size: 0.78rem;
+      transition: all 0.2s;
+    }
+    .element-item-btn:hover {
+      background: #31333b;
+      border-color: var(--canva-teal);
+    }
+
+    .text-add-btn {
+      background: #25262c;
+      border: 1px solid #373a40;
+      border-radius: 8px;
+      color: white;
+      padding: 12px 14px;
+      text-align: right;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+    .text-add-btn:hover {
+      background: #31333b;
+      border-color: var(--canva-purple);
+    }
+
+    .palette-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .palette-box {
+      background: #25262c;
+      border: 1px solid #373a40;
+      border-radius: 8px;
+      padding: 10px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .palette-box:hover {
+      border-color: var(--canva-purple);
+    }
+    .palette-box h5 {
+      font-size: 0.8rem;
+      margin-bottom: 6px;
+      color: #d1d5db;
+    }
+    .palette-swatches {
+      display: flex;
+      height: 24px;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .palette-swatch {
+      flex: 1;
+      height: 100%;
+    }
+
+    /* Canvas Area */
+    main.canvas-viewport {
+      flex: 1;
+      overflow: auto;
+      background-color: var(--bg-canvas-area);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding: 40px;
+      background-image: radial-gradient(#c5c8d1 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+
+    /* The White Design Canvas */
+    .white-canvas {
+      width: 900px;
+      height: 600px;
+      background: #ffffff;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.08);
+      border-radius: 2px;
+      position: relative;
+      transform-origin: center center;
+      transition: transform 0.15s ease-out;
+      overflow: hidden;
+    }
+
+    /* Snap Guides */
+    .snap-guide-h, .snap-guide-v {
+      position: absolute;
+      background-color: var(--guide-color);
+      z-index: 999;
+      pointer-events: none;
+      display: none;
+    }
+    .snap-guide-h {
+      height: 1px;
+      left: 0;
+      right: 0;
+    }
+    .snap-guide-v {
+      width: 1px;
+      top: 0;
+      bottom: 0;
+    }
+
+    /* Canvas Items (Chart / Text / Shape) */
+    .canvas-item {
+      position: absolute;
+      box-sizing: border-box;
+      cursor: move;
+      border: 1px solid transparent;
+      padding: 4px;
+    }
+    .canvas-item.selected {
+      border: 1.5px solid var(--canva-purple);
+      box-shadow: 0 0 0 1px rgba(125, 42, 232, 0.25);
+    }
+    /* Selection Handles */
+    .canvas-item.selected::after {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border: 1px solid #7d2ae8;
+      pointer-events: none;
+      border-radius: 2px;
+    }
+    .resize-handle {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: white;
+      border: 1.5px solid #7d2ae8;
+      border-radius: 50%;
+      display: none;
+      z-index: 10;
+    }
+    .canvas-item.selected .resize-handle {
+      display: block;
+    }
+    .handle-nw { top: -5px; right: -5px; cursor: nwse-resize; }
+    .handle-ne { top: -5px; left: -5px; cursor: nesw-resize; }
+    .handle-se { bottom: -5px; left: -5px; cursor: nwse-resize; }
+    .handle-sw { bottom: -5px; right: -5px; cursor: nesw-resize; }
+
+    /* Text Item Specific */
+    .text-content {
+      width: 100%;
+      height: 100%;
+      outline: none;
+      word-break: break-word;
+      line-height: 1.35;
+      cursor: text;
+      user-select: text;
+    }
+    .text-content[contenteditable="true"] {
+      user-select: text;
+      cursor: text;
+    }
+
+    /* Chart Container Item */
+    .chart-container-box {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      pointer-events: none; /* Mouse interacts with container */
+    }
+    .chart-container-box svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    /* Right Data Table Drawer / Panel */
+    aside.data-drawer {
+      width: 320px;
+      background: white;
+      border-inline-start: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      z-index: 75;
+      box-shadow: -2px 0 12px rgba(0,0,0,0.05);
+      transition: margin-inline-end 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    aside.data-drawer.hidden {
+      margin-inline-end: -320px;
+      display: none;
+    }
+    .data-drawer-header {
+      padding: 12px 16px;
+      background: #fbfbfd;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .data-drawer-header h3 {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .data-table-wrap {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px;
+    }
+    .chart-data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+    }
+    .chart-data-table th, .chart-data-table td {
+      border: 1px solid var(--border-color);
+      padding: 6px 8px;
+      text-align: right;
+    }
+    .chart-data-table th {
+      background: #f4f5f7;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .chart-data-table input {
+      width: 100%;
+      border: none;
+      outline: none;
+      font-family: inherit;
+      font-size: 0.82rem;
+      background: transparent;
+      padding: 2px 4px;
+    }
+    .chart-data-table input:focus {
+      background: #eef2ff;
+      border-radius: 2px;
+    }
+    .del-row-btn {
+      color: #e53935;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 0.9rem;
+      padding: 0 4px;
+    }
+    .data-actions-bar {
+      padding: 10px 14px;
+      border-top: 1px solid var(--border-color);
+      background: #fafafa;
+      display: flex;
+      gap: 8px;
+    }
+
+    /* Training Lab Modal / Drawer */
+    .lab-panel {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      width: 330px;
+      background: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(0, 0, 0, 0.05);
+      z-index: 120;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.25s ease;
+    }
+    .lab-panel.collapsed .lab-body {
+      display: none;
+    }
+    .lab-header {
+      background: linear-gradient(135deg, #1e1e24 0%, #2e2f38 100%);
+      color: #ffcc00;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+    .lab-header h4 {
+      font-size: 0.88rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .lab-body {
+      padding: 14px;
+      background: #ffffff;
+      max-height: 480px;
+      overflow-y: auto;
+    }
+    .lab-desc {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      line-height: 1.4;
+    }
+    .task-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .task-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      background: #f7f8fa;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      font-size: 0.8rem;
+      transition: all 0.2s;
+    }
+    .task-item.completed {
+      background: #f0fdf4;
+      border-color: #86efac;
+      color: #166534;
+    }
+    .task-badge {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #e2e8f0;
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+    .task-item.completed .task-badge {
+      background: #22c55e;
+      color: white;
+    }
+    .task-text {
+      flex: 1;
+      line-height: 1.35;
+    }
+
+    /* Toast Notification */
+    .toast-notice {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: rgba(17, 24, 39, 0.95);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+      z-index: 1000;
+      pointer-events: none;
+      transition: transform 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .toast-notice.show {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Offline Watermark/Status Indicator */
+    .offline-tag {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.75rem;
+      background: rgba(0,0,0,0.2);
+      padding: 3px 8px;
+      border-radius: 12px;
+      color: #d1fae5;
+    }
+    .offline-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 6px #10b981;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation Header -->
+  <header class="top-nav">
+    <div class="header-left">
+      <button class="btn-header" id="btnToggleSidebar" style="padding: 6px 10px;" title="فتح / إغلاق القائمة الجانبية (Sidebar Toggle)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div class="brand-logo">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10" stroke="#00c4cc"/>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+          <path d="M2 12h20"/>
+        </svg>
+        <span>إنفوجرافيك كانفا</span>
+        <span class="brand-badge">معمل مدرسي</span>
+      </div>
+      <div class="offline-tag">
+        <span class="offline-dot"></span>
+        <span>يعمل بدون إنترنت 100%</span>
+      </div>
+    </div>
+
+    <div class="header-center">
+      <button class="btn-header" id="btnNewBlankProject" style="background: rgba(255,255,255,0.22); border-color: rgba(255,255,255,0.4);" title="البدء بمشروع وتصميم فارغ جديد">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <span>مشروع فارغ (New Blank)</span>
+      </button>
+      <div class="toolbar-divider" style="background: rgba(255,255,255,0.25);"></div>
+      <input type="text" id="projectTitle" class="project-title-input" value="مشروع الإنفوجرافيك المدرسي" title="انقر لتعديل عنوان المشروع">
+      <div class="toolbar-divider" style="background: rgba(255,255,255,0.2);"></div>
+      <button class="btn-header" id="btnUndo" title="تراجع عن آخر إجراء (Ctrl+Z)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>
+        <span>تراجع (Undo)</span>
+      </button>
+      <div class="toolbar-group" style="background: rgba(255,255,255,0.15); border-radius: 6px; padding: 2px;">
+        <button class="btn-header" id="btnZoomOut" style="padding: 4px 8px; border: none;" title="تصغير">-</button>
+        <span id="zoomPercent" style="font-size: 0.8rem; font-weight: bold; padding: 0 4px;">100%</span>
+        <button class="btn-header" id="btnZoomIn" style="padding: 4px 8px; border: none;" title="تكبير">+</button>
+        <button class="btn-header" id="btnZoomReset" style="padding: 4px 8px; border: none; font-size: 0.72rem;" title="إعادة ضبط الحجم">1:1</button>
+      </div>
+    </div>
+
+    <div class="header-right">
+      <button class="btn-header primary" id="btnExportPng">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span>تنزيل (Download PNG)</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Contextual Toolbar (Properties Bar) -->
+  <div class="context-bar" id="contextBar">
+    <div style="color: var(--text-muted); font-size: 0.8rem; display: flex; align-items: center; gap: 8px;" id="noSelectionNotice">
+      <span>حدد أي عنصر لتخصيصه، أو غيّر لون الخلفية:</span>
+      <div class="toolbar-divider"></div>
+      <span style="font-weight: 600; color: var(--text-main);">لون خلفية اللوحة:</span>
+      <input type="color" class="tool-color-picker" id="canvasBgPicker" value="#ffffff" title="اختيار لون خلفية لوحة التصميم">
+      <div style="display: flex; gap: 4px; align-items: center;">
+        <button class="bg-preset-dot" data-bg="#ffffff" style="background:#ffffff; width:18px; height:18px; border-radius:50%; border:1px solid #cbd5e1; cursor:pointer;" title="أبيض"></button>
+        <button class="bg-preset-dot" data-bg="#f8fafc" style="background:#f8fafc; width:18px; height:18px; border-radius:50%; border:1px solid #cbd5e1; cursor:pointer;" title="رمادي خفيف"></button>
+        <button class="bg-preset-dot" data-bg="#f0f9ff" style="background:#f0f9ff; width:18px; height:18px; border-radius:50%; border:1px solid #bae6fd; cursor:pointer;" title="أزرق ثلجي"></button>
+        <button class="bg-preset-dot" data-bg="#fdf4ff" style="background:#fdf4ff; width:18px; height:18px; border-radius:50%; border:1px solid #f5d0fe; cursor:pointer;" title="زهري فاتح"></button>
+        <button class="bg-preset-dot" data-bg="#f0fdf4" style="background:#f0fdf4; width:18px; height:18px; border-radius:50%; border:1px solid #bbf7d0; cursor:pointer;" title="نعناعي خفيف"></button>
+        <button class="bg-preset-dot" data-bg="#0f172a" style="background:#0f172a; width:18px; height:18px; border-radius:50%; border:1px solid #334155; cursor:pointer;" title="ليلي داكن"></button>
+      </div>
+    </div>
+
+    <!-- Text Controls -->
+    <div class="toolbar-group" id="textControls" style="display: none;">
+      <button class="tool-btn" id="btnEditTextModal" style="background:#e8e2fa; color:var(--canva-purple); font-weight:bold;" title="تعديل نص العنصر">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        <span>تعديل النص (Edit)</span>
+      </button>
+      <div class="toolbar-divider"></div>
+      <span style="font-size: 0.8rem; color: var(--text-muted);">محتوى النص:</span>
+      <input type="text" class="tool-input" id="toolbarTextInput" style="width: 220px;" placeholder="اكتب النص هنا...">
+      <div class="toolbar-divider"></div>
+      <select class="tool-select" id="fontFamilySelect" title="نوع الخط">
+        <option value="inherit">الخط الافتراضي (Cairo/System)</option>
+        <option value="'Courier New', monospace">خط برمجي (Monospace)</option>
+        <option value="Georgia, serif">خط كلاسيكي (Serif)</option>
+        <option value="'Arial Black', sans-serif">عريض ضخم (Impact/Black)</option>
+      </select>
+      <input type="number" class="tool-input" id="fontSizeInput" min="10" max="120" value="24" style="width: 55px;" title="حجم الخط">
+      <input type="color" class="tool-color-picker" id="textColorPicker" value="#0e1318" title="لون النص">
+      <div class="toolbar-divider"></div>
+      <button class="tool-btn" id="btnBold" title="عريض (Bold)"><strong>B</strong></button>
+      <button class="tool-btn" id="btnItalic" title="مائل (Italic)"><em>I</em></button>
+      <div class="toolbar-divider"></div>
+      <button class="tool-btn" id="btnAlignRight" title="محاذاة لليمين">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="12" x2="9" y2="12"/><line x1="21" y1="18" x2="5" y2="18"/></svg>
+      </button>
+      <button class="tool-btn" id="btnAlignCenter" title="محاذاة للوسط">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="6"/><line x1="21" y1="12" x2="3" y2="12"/><line x1="18" y1="18" x2="6" y2="18"/></svg>
+      </button>
+      <button class="tool-btn" id="btnAlignLeft" title="محاذاة لليسار">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="21" y1="6" x2="3" y2="6"/><line x1="15" y1="12" x2="3" y2="12"/><line x1="19" y1="18" x2="3" y2="18"/></svg>
+      </button>
+    </div>
+
+    <!-- Chart Controls -->
+    <div class="toolbar-group" id="chartControls" style="display: none;">
+      <button class="tool-btn active" id="btnOpenDataTable" title="عرض وتعديل جدول البيانات">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+        <strong>تعديل البيانات (Edit Data)</strong>
+      </button>
+      <div class="toolbar-divider"></div>
+      <span style="font-size: 0.8rem; color: var(--text-muted);">النوع:</span>
+      <select class="tool-select" id="chartTypeSelect">
+        <option value="bar">مخطط أعمدة (Bar)</option>
+        <option value="pie">مخطط دائري (Pie)</option>
+        <option value="donut">مخطط حلقي (Donut)</option>
+        <option value="line">مخطط خطي (Line)</option>
+      </select>
+      <div class="toolbar-divider"></div>
+      <span style="font-size: 0.8rem; color: var(--text-muted);">النمط اللوني:</span>
+      <select class="tool-select" id="chartPaletteSelect">
+        <option value="corporate">رسمي واحترافي (Canva Classic)</option>
+        <option value="warm">طاقة ودفء (Warm Sunset)</option>
+        <option value="nature">طبيعة وهدوء (Emerald Green)</option>
+        <option value="cyber">حديث وعصري (Neon Cyber)</option>
+        <option value="pastel">ألوان هادئة (Soft Pastel)</option>
+      </select>
+    </div>
+
+    <!-- Shape Controls -->
+    <div class="toolbar-group" id="shapeControls" style="display: none;">
+      <span style="font-size: 0.8rem; color: var(--text-muted);">لون الشكل:</span>
+      <input type="color" class="tool-color-picker" id="shapeColorPicker" value="#7d2ae8" title="تغيير لون الشكل">
+    </div>
+
+    <!-- Common Action Controls (Position / Delete) -->
+    <div class="toolbar-group" id="commonControls" style="display: none; margin-inline-start: auto;">
+      <button class="tool-btn" id="btnBringForward" title="إحضار للمقدمة">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+        <span>ترتيب للأمام</span>
+      </button>
+      <button class="tool-btn" id="btnDuplicate" title="تكرار العنصر (Duplicate)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      </button>
+      <button class="tool-btn" id="btnDeleteElem" style="color: #e53935;" title="حذف العنصر المحدد (Delete)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        <span>حذف</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Body -->
+  <div class="app-body">
+    <!-- Dark Sidebar -->
+    <nav class="app-sidebar">
+      <button class="nav-tab-btn active" data-tab="templates" title="القوالب الجاهزة">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+        <span>القوالب</span>
+      </button>
+      <button class="nav-tab-btn" data-tab="elements" title="المخططات والعناصر">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        <span>العناصر</span>
+      </button>
+      <button class="nav-tab-btn" data-tab="text" title="إضافة النصوص">
+        <svg viewBox="0 0 24 24"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+        <span>النصوص</span>
+      </button>
+      <button class="nav-tab-btn" data-tab="smartart" title="مخططات سمارت آرت للنصوص">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M10 6.5h4M6.5 10v4M17.5 10v4M10 17.5h4"/></svg>
+        <span>سمارت آرت</span>
+      </button>
+      <button class="nav-tab-btn" data-tab="styles" title="الأنماط والألوان">
+        <svg viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+        <span>الأنماط</span>
+      </button>
+    </nav>
+
+    <!-- Side Drawer Content -->
+    <aside class="drawer-panel" id="drawerPanel">
+      <div class="drawer-header">
+        <h3 id="drawerTitle">القوالب الجاهزة (Templates)</h3>
+        <button class="drawer-close-btn" id="btnCloseDrawer" title="إغلاق الدرج">✕</button>
+      </div>
+      <div class="drawer-content" id="drawerContent">
+        <!-- Will be filled dynamically by JS according to selected tab -->
+      </div>
+    </aside>
+
+    <!-- Canvas Workspace Viewport -->
+    <main class="canvas-viewport" id="canvasViewport">
+      <!-- White Canvas (900x600 default aspect) -->
+      <div class="white-canvas" id="designCanvas">
+        <!-- Center snap guides -->
+        <div class="snap-guide-h" id="snapH"></div>
+        <div class="snap-guide-v" id="snapV"></div>
+        <!-- Canvas Elements injected here -->
+      </div>
+    </main>
+
+    <!-- Data Table Side Drawer (Chart Data Editor) -->
+    <aside class="data-drawer hidden" id="chartDataDrawer">
+      <div class="data-drawer-header">
+        <h3>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>
+          <span>جدول بيانات المخطط</span>
+        </h3>
+        <button class="drawer-close-btn" id="btnCloseDataDrawer" title="إغلاق">✕</button>
+      </div>
+      <div class="data-table-wrap">
+        <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px;">
+          عدّل التسميات والقيم وسيتم تحديث الرسم البياني على الفور:
+        </p>
+        <table class="chart-data-table" id="dataTable">
+          <thead>
+            <tr>
+              <th style="width: 55%;">التسمية (العنصر)</th>
+              <th style="width: 35%;">القيمة</th>
+              <th style="width: 10%;"></th>
+            </tr>
+          </thead>
+          <tbody id="dataTableBody">
+            <!-- Dynamic Data Rows -->
+          </tbody>
+        </table>
+      </div>
+      <div class="data-actions-bar">
+        <button class="tool-btn" id="btnAddDataRow" style="background: #f0f2f5; font-weight: bold; flex: 1;">
+          <span>+ إضافة صف بيانات</span>
+        </button>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Toast Notification Bar -->
+  <div class="toast-notice" id="toastNotice">
+    <span id="toastMsg">تم الإجراء بنجاح!</span>
+  </div>
+
+  <!-- Hidden Canvas for Offline Image Generation -->
+  <canvas id="exportCanvas" style="display: none;"></canvas>
+
+  <!-- Application Logic -->
+  <script>
+    /**
+     * CANVA-STYLE OFFLINE INFOGRAPHIC & CHART ENGINE
+     * 100% Client-Side Pure JS + SVG + Canvas Export
+     */
+
+    // --- State Management ---
+    const state = {
+      zoom: 1.0,
+      selectedId: null,
+      canvasBg: '#ffffff',
+      activeTab: 'templates',
+      isDataDrawerOpen: false,
+      history: [],
+      items: [], // Array of elements on the canvas
+      nextId: 1,
+      labTasks: {
+        task1: false, // Added chart or loaded template
+        task2: false, // Edited data table
+        task3: false, // Changed palette
+        task4: false, // Edited text
+        task5: false  // Exported PNG
+      }
+    };
+
+    // --- Palettes Definition ---
+    const PALETTES = {
+      corporate: {
+        name: 'رسمي واحترافي',
+        colors: ['#00c4cc', '#7d2ae8', '#2563eb', '#10b981', '#f59e0b', '#ec4899']
+      },
+      warm: {
+        name: 'طاقة ودفء',
+        colors: ['#ef4444', '#f97316', '#f59e0b', '#eab308', '#84cc16', '#d97706']
+      },
+      nature: {
+        name: 'طبيعة وهدوء',
+        colors: ['#059669', '#10b981', '#34d399', '#0284c7', '#0d9488', '#6ee7b7']
+      },
+      cyber: {
+        name: 'حديث وعصري (Neon)',
+        colors: ['#8b5cf6', '#ec4899', '#06b6d4', '#3b82f6', '#10b981', '#f43f5e']
+      },
+      pastel: {
+        name: 'ألوان هادئة',
+        colors: ['#93c5fd', '#a7f3d0', '#fde68a', '#fbcfe8', '#c4b5fd', '#fed7aa']
+      }
+    };
+
+    // --- DOM Elements ---
+    const designCanvas = document.getElementById('designCanvas');
+    const canvasViewport = document.getElementById('canvasViewport');
+    const drawerPanel = document.getElementById('drawerPanel');
+    const drawerTitle = document.getElementById('drawerTitle');
+    const drawerContent = document.getElementById('drawerContent');
+    const chartDataDrawer = document.getElementById('chartDataDrawer');
+    const dataTableBody = document.getElementById('dataTableBody');
+    const snapH = document.getElementById('snapH');
+    const snapV = document.getElementById('snapV');
+    const toastNotice = document.getElementById('toastNotice');
+    const toastMsg = document.getElementById('toastMsg');
+    const zoomPercent = document.getElementById('zoomPercent');
+
+    // Context Bar Elements
+    const noSelectionNotice = document.getElementById('noSelectionNotice');
+    const textControls = document.getElementById('textControls');
+    const chartControls = document.getElementById('chartControls');
+    const shapeControls = document.getElementById('shapeControls');
+    const commonControls = document.getElementById('commonControls');
+
+    // Toolbar Input Elements
+    const fontSizeInput = document.getElementById('fontSizeInput');
+    const textColorPicker = document.getElementById('textColorPicker');
+    const fontFamilySelect = document.getElementById('fontFamilySelect');
+    const btnBold = document.getElementById('btnBold');
+    const btnItalic = document.getElementById('btnItalic');
+    const chartTypeSelect = document.getElementById('chartTypeSelect');
+    const chartPaletteSelect = document.getElementById('chartPaletteSelect');
+    const shapeColorPicker = document.getElementById('shapeColorPicker');
+
+    // --- Toast Notification Helper ---
+    function showToast(msg) {
+      toastMsg.textContent = msg;
+      toastNotice.classList.add('show');
+      setTimeout(() => {
+        toastNotice.classList.remove('show');
+      }, 2600);
+    }
+
+    function completeLabTask(taskId) {
+      // Lab tasks removed
+    }
+
+    // --- History / Undo System ---
+    function saveHistory() {
+      // Keep last 20 states
+      const snapshot = JSON.stringify({
+        items: state.items,
+        nextId: state.nextId,
+        canvasBg: state.canvasBg
+      });
+      state.history.push(snapshot);
+      if (state.history.length > 25) state.history.shift();
+    }
+
+    function undo() {
+      if (state.history.length > 0) {
+        const lastState = JSON.parse(state.history.pop());
+        state.items = lastState.items;
+        state.nextId = lastState.nextId;
+        state.canvasBg = lastState.canvasBg || '#ffffff';
+        applyCanvasBg(state.canvasBg, false);
+        state.selectedId = null;
+        renderAll();
+        updateToolbarContext();
+        closeDataDrawer();
+        showToast('تم التراجع (Undo)');
+      } else {
+        showToast('لا توجد خطوات سابقة للتراجع عنها');
+      }
+    }
+
+    // --- Pure SVG Chart Generation Engine ---
+    function generateChartSVG(item) {
+      const { chartType, data, palette, width, height } = item;
+      const colors = (PALETTES[palette] || PALETTES.corporate).colors;
+      const padding = { top: 30, right: 25, bottom: 45, left: 45 };
+      const plotW = Math.max(width - padding.left - padding.right, 50);
+      const plotH = Math.max(height - padding.top - padding.bottom, 50);
+
+      let svgInner = '';
+
+      if (chartType === 'bar') {
+        const maxVal = Math.max(...data.map(d => Number(d.value) || 0), 10);
+        const colWidth = plotW / data.length;
+        const barPad = colWidth * 0.22;
+        const barW = Math.max(colWidth - barPad, 8);
+
+        // Y-axis gridlines & labels
+        const gridSteps = 4;
+        for (let i = 0; i <= gridSteps; i++) {
+          const val = Math.round((maxVal / gridSteps) * i);
+          const y = padding.top + plotH - (val / maxVal) * plotH;
+          svgInner += `
+            <line x1="${padding.left}" y1="${y}" x2="${padding.left + plotW}" y2="${y}" stroke="#e5e7eb" stroke-dasharray="3,3" />
+            <text x="${padding.left - 8}" y="${y + 4}" font-size="10" fill="#6b7280" text-anchor="end" font-family="sans-serif">${val}</text>
+          `;
+        }
+
+        // Bars & Labels
+        data.forEach((d, i) => {
+          const num = Number(d.value) || 0;
+          const barH = (num / maxVal) * plotH;
+          const x = padding.left + i * colWidth + (barPad / 2);
+          const y = padding.top + (plotH - barH);
+          const color = colors[i % colors.length];
+
+          svgInner += `
+            <g class="chart-bar-group">
+              <rect x="${x}" y="${y}" width="${barW}" height="${barH}" rx="4" fill="${color}" opacity="0.95">
+                <title>${d.label}: ${num}</title>
+              </rect>
+              <text x="${x + barW / 2}" y="${Math.max(y - 6, padding.top)}" font-size="11" font-weight="bold" fill="${color}" text-anchor="middle" font-family="sans-serif">${num}</text>
+              <text x="${x + barW / 2}" y="${padding.top + plotH + 18}" font-size="11" fill="#374151" text-anchor="middle" font-family="sans-serif">${d.label}</text>
+            </g>
+          `;
+        });
+
+      } else if (chartType === 'pie' || chartType === 'donut') {
+        const total = data.reduce((acc, d) => acc + (Number(d.value) || 0), 0) || 1;
+        const cx = width * 0.42;
+        const cy = height * 0.5;
+        const radius = Math.min(plotW, plotH) * 0.48;
+        const innerRadius = chartType === 'donut' ? radius * 0.55 : 0;
+
+        let startAngle = -Math.PI / 2;
+
+        data.forEach((d, i) => {
+          const val = Number(d.value) || 0;
+          const sliceAngle = (val / total) * 2 * Math.PI;
+          const endAngle = startAngle + sliceAngle;
+          const color = colors[i % colors.length];
+          const pct = Math.round((val / total) * 100);
+
+          // Calculate Arc Points
+          const x1 = cx + radius * Math.cos(startAngle);
+          const y1 = cy + radius * Math.sin(startAngle);
+          const x2 = cx + radius * Math.cos(endAngle);
+          const y2 = cy + radius * Math.sin(endAngle);
+
+          const largeArc = sliceAngle > Math.PI ? 1 : 0;
+
+          let pathD = '';
+          if (innerRadius === 0) {
+            pathD = `M ${cx} ${cy} L ${x1} ${y1} A ${radius} ${radius} 0 ${largeArc} 1 ${x2} ${y2} Z`;
+          } else {
+            const x3 = cx + innerRadius * Math.cos(endAngle);
+            const y3 = cy + innerRadius * Math.sin(endAngle);
+            const x4 = cx + innerRadius * Math.cos(startAngle);
+            const y4 = cy + innerRadius * Math.sin(startAngle);
+            pathD = `M ${x1} ${y1} A ${radius} ${radius} 0 ${largeArc} 1 ${x2} ${y2} L ${x3} ${y3} A ${innerRadius} ${innerRadius} 0 ${largeArc} 0 ${x4} ${y4} Z`;
+          }
+
+          svgInner += `<path d="${pathD}" fill="${color}" stroke="#ffffff" stroke-width="2"><title>${d.label}: ${val} (${pct}%)</title></path>`;
+
+          // Text on Slice if large enough
+          if (pct >= 8) {
+            const midAngle = startAngle + sliceAngle / 2;
+            const textDist = innerRadius > 0 ? (radius + innerRadius) / 2 : radius * 0.65;
+            const tx = cx + textDist * Math.cos(midAngle);
+            const ty = cy + textDist * Math.sin(midAngle);
+            svgInner += `<text x="${tx}" y="${ty + 4}" font-size="11" font-weight="bold" fill="#ffffff" text-anchor="middle" font-family="sans-serif">${pct}%</text>`;
+          }
+
+          startAngle = endAngle;
+        });
+
+        // Legend on the Right
+        const legendX = cx + radius + 25;
+        let legendY = Math.max(cy - (data.length * 20) / 2, 20);
+
+        data.forEach((d, i) => {
+          const color = colors[i % colors.length];
+          const val = Number(d.value) || 0;
+          const pct = Math.round((val / total) * 100);
+          svgInner += `
+            <g transform="translate(${legendX}, ${legendY})">
+              <rect width="12" height="12" rx="3" fill="${color}" />
+              <text x="18" y="10" font-size="11" fill="#374151" font-family="sans-serif">${d.label} (${pct}%)</text>
+            </g>
+          `;
+          legendY += 22;
+        });
+
+      } else if (chartType === 'line') {
+        const maxVal = Math.max(...data.map(d => Number(d.value) || 0), 10);
+        const colWidth = plotW / Math.max(data.length - 1, 1);
+
+        // Y-axis grid
+        const gridSteps = 4;
+        for (let i = 0; i <= gridSteps; i++) {
+          const val = Math.round((maxVal / gridSteps) * i);
+          const y = padding.top + plotH - (val / maxVal) * plotH;
+          svgInner += `
+            <line x1="${padding.left}" y1="${y}" x2="${padding.left + plotW}" y2="${y}" stroke="#e5e7eb" stroke-dasharray="3,3" />
+            <text x="${padding.left - 8}" y="${y + 4}" font-size="10" fill="#6b7280" text-anchor="end" font-family="sans-serif">${val}</text>
+          `;
+        }
+
+        // Line Path Points
+        let points = [];
+        data.forEach((d, i) => {
+          const num = Number(d.value) || 0;
+          const x = padding.left + i * colWidth;
+          const y = padding.top + (plotH - (num / maxVal) * plotH);
+          points.push({ x, y, num, label: d.label });
+        });
+
+        const linePathStr = points.map((p, idx) => (idx === 0 ? `M ${p.x} ${p.y}` : `L ${p.x} ${p.y}`)).join(' ');
+        const areaPathStr = `${linePathStr} L ${points[points.length-1].x} ${padding.top + plotH} L ${points[0].x} ${padding.top + plotH} Z`;
+        const primaryColor = colors[0];
+
+        // Gradient Area Under Line
+        const gradId = `grad_${item.id}`;
+        svgInner += `
+          <defs>
+            <linearGradient id="${gradId}" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="${primaryColor}" stop-opacity="0.35"/>
+              <stop offset="100%" stop-color="${primaryColor}" stop-opacity="0.0"/>
+            </linearGradient>
+          </defs>
+          <path d="${areaPathStr}" fill="url(#${gradId})" />
+          <path d="${linePathStr}" fill="none" stroke="${primaryColor}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        `;
+
+        // Points & Labels
+        points.forEach((p, i) => {
+          svgInner += `
+            <circle cx="${p.x}" cy="${p.y}" r="5" fill="#ffffff" stroke="${primaryColor}" stroke-width="2.5" />
+            <text x="${p.x}" y="${p.y - 10}" font-size="11" font-weight="bold" fill="${primaryColor}" text-anchor="middle" font-family="sans-serif">${p.num}</text>
+            <text x="${p.x}" y="${padding.top + plotH + 18}" font-size="11" fill="#374151" text-anchor="middle" font-family="sans-serif">${p.label}</text>
+          `;
+        });
+      }
+
+      return `
+        <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">
+          ${svgInner}
+        </svg>
+      `;
+    }
+
+    // --- DOM Canvas Element Rendering ---
+    function renderElement(item) {
+      let el = document.getElementById(`item_${item.id}`);
+      if (!el) {
+        el = document.createElement('div');
+        el.id = `item_${item.id}`;
+        el.className = 'canvas-item';
+        designCanvas.appendChild(el);
+        setupDragAndSelect(el, item);
+      }
+
+      // Position & Size
+      el.style.left = `${item.x}px`;
+      el.style.top = `${item.y}px`;
+      el.style.width = `${item.width}px`;
+      el.style.height = `${item.height}px`;
+      el.style.zIndex = item.zIndex || 1;
+
+      if (state.selectedId === item.id) {
+        el.classList.add('selected');
+      } else {
+        el.classList.remove('selected');
+      }
+
+      // Inner Content by Element Type
+      if (item.type === 'chart') {
+        el.innerHTML = `
+          <div class="chart-container-box">
+            ${generateChartSVG(item)}
+          </div>
+          <div class="resize-handle handle-nw" data-handle="nw"></div>
+          <div class="resize-handle handle-ne" data-handle="ne"></div>
+          <div class="resize-handle handle-se" data-handle="se"></div>
+          <div class="resize-handle handle-sw" data-handle="sw"></div>
+        `;
+      } else if (item.type === 'text') {
+        el.innerHTML = `
+          <div class="text-content" contenteditable="true" style="
+            font-size: ${item.fontSize}px;
+            font-family: ${item.fontFamily || 'inherit'};
+            font-weight: ${item.bold ? 'bold' : 'normal'};
+            font-style: ${item.italic ? 'italic' : 'normal'};
+            color: ${item.color || '#000000'};
+            text-align: ${item.textAlign || 'right'};
+          ">${item.text}</div>
+          <div class="resize-handle handle-nw" data-handle="nw"></div>
+          <div class="resize-handle handle-ne" data-handle="ne"></div>
+          <div class="resize-handle handle-se" data-handle="se"></div>
+          <div class="resize-handle handle-sw" data-handle="sw"></div>
+        `;
+
+        const textDiv = el.querySelector('.text-content');
+        
+        textDiv.addEventListener('mousedown', (e) => {
+          // If already editing, allow cursor placement and selection without dragging
+          if (document.activeElement === textDiv) {
+            e.stopPropagation();
+          }
+        });
+
+        textDiv.addEventListener('focus', () => {
+          selectItem(item.id);
+        });
+
+        textDiv.addEventListener('input', () => {
+          item.text = textDiv.innerText;
+        });
+
+        textDiv.addEventListener('blur', () => {
+          if (item.text !== textDiv.innerText) {
+            saveHistory();
+            item.text = textDiv.innerText;
+          }
+        });
+      } else if (item.type === 'shape') {
+        el.innerHTML = `
+          <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; pointer-events:none;">
+            ${item.svg.replace('currentColor', item.color || '#7d2ae8')}
+          </div>
+          <div class="resize-handle handle-nw" data-handle="nw"></div>
+          <div class="resize-handle handle-ne" data-handle="ne"></div>
+          <div class="resize-handle handle-se" data-handle="se"></div>
+          <div class="resize-handle handle-sw" data-handle="sw"></div>
+        `;
+      }
+    }
+
+    function renderAll() {
+      // Remove stale elements
+      const currentIds = new Set(state.items.map(it => `item_${it.id}`));
+      Array.from(designCanvas.querySelectorAll('.canvas-item')).forEach(el => {
+        if (!currentIds.has(el.id)) el.remove();
+      });
+
+      // Render items
+      state.items.forEach(renderElement);
+    }
+
+    // --- Interactive Drag, Snap, and Resize Handling ---
+    function setupDragAndSelect(el, item) {
+      let isDragging = false;
+      let isResizing = false;
+      let resizeHandle = null;
+      let startX, startY;
+      let initialLeft, initialTop, initialWidth, initialHeight;
+
+      el.addEventListener('mousedown', (e) => {
+        if (e.target.isContentEditable) {
+          selectItem(item.id);
+          return;
+        }
+
+        selectItem(item.id);
+
+        if (e.target.classList.contains('resize-handle')) {
+          isResizing = true;
+          resizeHandle = e.target.dataset.handle;
+        } else {
+          isDragging = true;
+        }
+
+        startX = e.clientX;
+        startY = e.clientY;
+        initialLeft = item.x;
+        initialTop = item.y;
+        initialWidth = item.width;
+        initialHeight = item.height;
+
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', onMouseUp);
+        e.stopPropagation();
+      });
+
+      function onMouseMove(e) {
+        const dx = (e.clientX - startX) / state.zoom;
+        const dy = (e.clientY - startY) / state.zoom;
+
+        if (isDragging) {
+          let newX = initialLeft + dx;
+          let newY = initialTop + dy;
+
+          // Canvas Center Snapping
+          const canvasW = 900;
+          const canvasH = 600;
+          const centerX = newX + item.width / 2;
+          const centerY = newY + item.height / 2;
+          const snapThreshold = 6;
+
+          // Vertical center line snap
+          if (Math.abs(centerX - canvasW / 2) < snapThreshold) {
+            newX = canvasW / 2 - item.width / 2;
+            snapV.style.left = `${canvasW / 2}px`;
+            snapV.style.display = 'block';
+          } else {
+            snapV.style.display = 'none';
+          }
+
+          // Horizontal center line snap
+          if (Math.abs(centerY - canvasH / 2) < snapThreshold) {
+            newY = canvasH / 2 - item.height / 2;
+            snapH.style.top = `${canvasH / 2}px`;
+            snapH.style.display = 'block';
+          } else {
+            snapH.style.display = 'none';
+          }
+
+          item.x = Math.round(newX);
+          item.y = Math.round(newY);
+          el.style.left = `${item.x}px`;
+          el.style.top = `${item.y}px`;
+
+        } else if (isResizing) {
+          let newW = initialWidth;
+          let newH = initialHeight;
+          let newX = initialLeft;
+          let newY = initialTop;
+
+          if (resizeHandle.includes('e')) {
+            newW = Math.max(initialWidth - dx, 60);
+            newX = initialLeft + (initialWidth - newW);
+          }
+          if (resizeHandle.includes('w')) {
+            newW = Math.max(initialWidth + dx, 60);
+          }
+          if (resizeHandle.includes('s')) {
+            newH = Math.max(initialHeight + dy, 40);
+          }
+          if (resizeHandle.includes('n')) {
+            newH = Math.max(initialHeight - dy, 40);
+            newY = initialTop + (initialHeight - newH);
+          }
+
+          item.width = Math.round(newW);
+          item.height = Math.round(newH);
+          item.x = Math.round(newX);
+          item.y = Math.round(newY);
+
+          el.style.width = `${item.width}px`;
+          el.style.height = `${item.height}px`;
+          el.style.left = `${item.x}px`;
+          el.style.top = `${item.y}px`;
+
+          // Re-render SVG chart if chart
+          if (item.type === 'chart') {
+            const box = el.querySelector('.chart-container-box');
+            if (box) box.innerHTML = generateChartSVG(item);
+          }
+        }
+      }
+
+      function onMouseUp() {
+        snapH.style.display = 'none';
+        snapV.style.display = 'none';
+        if (isDragging || isResizing) {
+          saveHistory();
+        }
+        isDragging = false;
+        isResizing = false;
+        document.removeEventListener('mousemove', onMouseMove);
+        document.removeEventListener('mouseup', onMouseUp);
+      }
+    }
+
+    // --- Selection and Context Toolbar Management ---
+    function selectItem(id) {
+      if (state.selectedId === id) return; // Avoid re-rendering if already selected to prevent killing active text focus
+      state.selectedId = id;
+      renderAll();
+      updateToolbarContext();
+
+      const item = state.items.find(it => it.id === id);
+      if (item && item.type === 'chart') {
+        populateDataTable(item);
+      } else {
+        closeDataDrawer();
+      }
+    }
+
+    function deselectAll() {
+      state.selectedId = null;
+      renderAll();
+      updateToolbarContext();
+      closeDataDrawer();
+    }
+
+    designCanvas.addEventListener('mousedown', (e) => {
+      if (e.target === designCanvas) {
+        deselectAll();
+      }
+    });
+
+    function updateToolbarContext() {
+      const item = state.items.find(it => it.id === state.selectedId);
+
+      noSelectionNotice.style.display = 'none';
+      textControls.style.display = 'none';
+      chartControls.style.display = 'none';
+      shapeControls.style.display = 'none';
+      commonControls.style.display = 'none';
+
+      if (!item) {
+        noSelectionNotice.style.display = 'flex';
+        const canvasBgPicker = document.getElementById('canvasBgPicker');
+        if (canvasBgPicker) canvasBgPicker.value = state.canvasBg;
+        return;
+      }
+
+      commonControls.style.display = 'flex';
+
+      if (item.type === 'text') {
+        textControls.style.display = 'flex';
+        const toolbarTextInput = document.getElementById('toolbarTextInput');
+        if (toolbarTextInput) toolbarTextInput.value = item.text || '';
+        fontSizeInput.value = item.fontSize || 24;
+        textColorPicker.value = item.color || '#0e1318';
+        fontFamilySelect.value = item.fontFamily || 'inherit';
+        btnBold.classList.toggle('active', !!item.bold);
+        btnItalic.classList.toggle('active', !!item.italic);
+      } else if (item.type === 'chart') {
+        chartControls.style.display = 'flex';
+        chartTypeSelect.value = item.chartType;
+        chartPaletteSelect.value = item.palette;
+      } else if (item.type === 'shape') {
+        shapeControls.style.display = 'flex';
+        shapeColorPicker.value = item.color || '#7d2ae8';
+      }
+    }
+
+    // --- Data Drawer / Interactive Table ---
+    function openDataDrawer() {
+      chartDataDrawer.classList.remove('hidden');
+      state.isDataDrawerOpen = true;
+    }
+
+    function closeDataDrawer() {
+      chartDataDrawer.classList.add('hidden');
+      state.isDataDrawerOpen = false;
+    }
+
+    function populateDataTable(chartItem) {
+      openDataDrawer();
+      dataTableBody.innerHTML = '';
+
+      chartItem.data.forEach((row, idx) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><input type="text" class="row-label-input" value="${row.label}"></td>
+          <td><input type="number" class="row-value-input" value="${row.value}"></td>
+          <td style="text-align:center;"><button class="del-row-btn" data-idx="${idx}" title="حذف هذا الصف">✕</button></td>
+        `;
+
+        // Input Listeners
+        const labelInp = tr.querySelector('.row-label-input');
+        const valInp = tr.querySelector('.row-value-input');
+        const delBtn = tr.querySelector('.del-row-btn');
+
+        labelInp.addEventListener('input', () => {
+          saveHistory();
+          row.label = labelInp.value;
+          renderItemChart(chartItem);
+          completeLabTask('task2');
+        });
+
+        valInp.addEventListener('input', () => {
+          saveHistory();
+          row.value = Number(valInp.value) || 0;
+          renderItemChart(chartItem);
+          completeLabTask('task2');
+        });
+
+        delBtn.addEventListener('click', () => {
+          if (chartItem.data.length <= 1) {
+            showToast('يجب الاحتفاظ بصف بيانات واحد على الأقل للمخطط!');
+            return;
+          }
+          saveHistory();
+          chartItem.data.splice(idx, 1);
+          populateDataTable(chartItem);
+          renderItemChart(chartItem);
+          completeLabTask('task2');
+        });
+
+        dataTableBody.appendChild(tr);
+      });
+    }
+
+    function renderItemChart(item) {
+      const el = document.getElementById(`item_${item.id}`);
+      if (el) {
+        const box = el.querySelector('.chart-container-box');
+        if (box) box.innerHTML = generateChartSVG(item);
+      }
+    }
+
+    document.getElementById('btnAddDataRow').addEventListener('click', () => {
+      const item = state.items.find(it => it.id === state.selectedId);
+      if (item && item.type === 'chart') {
+        saveHistory();
+        const nextNum = item.data.length + 1;
+        item.data.push({ label: `عنصر ${nextNum}`, value: Math.floor(Math.random() * 50) + 20 });
+        populateDataTable(item);
+        renderItemChart(item);
+        completeLabTask('task2');
+      }
+    });
+
+    document.getElementById('btnCloseDataDrawer').addEventListener('click', closeDataDrawer);
+    document.getElementById('btnOpenDataTable').addEventListener('click', () => {
+      const item = state.items.find(it => it.id === state.selectedId);
+      if (item && item.type === 'chart') {
+        populateDataTable(item);
+      }
+    });
+
+    // --- Toolbar Event Listeners ---
+    const toolbarTextInput = document.getElementById('toolbarTextInput');
+    if (toolbarTextInput) {
+      toolbarTextInput.addEventListener('input', () => {
+        const item = state.items.find(it => it.id === state.selectedId);
+        if (item && item.type === 'text') {
+          item.text = toolbarTextInput.value;
+          const el = document.getElementById(`item_${item.id}`);
+          if (el) {
+            const textDiv = el.querySelector('.text-content');
+            if (textDiv) textDiv.innerText = item.text;
+          }
+        }
+      });
+      toolbarTextInput.addEventListener('change', () => {
+        saveHistory();
+      });
+    }
+
+    const btnEditTextModal = document.getElementById('btnEditTextModal');
+    if (btnEditTextModal) {
+      btnEditTextModal.addEventListener('click', () => {
+        const item = state.items.find(it => it.id === state.selectedId);
+        if (item && item.type === 'text') {
+          const newText = prompt('تعديل النص:', item.text);
+          if (newText !== null && newText !== item.text) {
+            saveHistory();
+            item.text = newText;
+            if (toolbarTextInput) toolbarTextInput.value = newText;
+            renderElement(item);
+            showToast('تم تعديل النص بنجاح');
+          }
+        }
+      });
+    }
+
+    fontSizeInput.addEventListener('change', () => {
+      const item = state.items.find(it => it.id === state.selectedId);
+      if (item && item.type === 'text') {
+        saveHistory();
+        item.fontSize = Number(fontSizeInput.value) || 24;
+        renderElement(item);
+      }
+    });
+
+    textColorPicker.addEventListener('input', () => {
+      const item = state.items.find(it => it.id === state.selectedId);
+      if (item && item.type === 'text') {
+        item.color = textColorPicker.value;
+        renderElement(item);
+      }
+    });
+    textColorPicker.addEventListener('change', saveHistory);
+
+    fontFamilySelect.addEventListener('change', () => {
+      const item = state.items.find(it => it.id === state.selectedId);
+      if (item && item.type === 'text') {
+        saveHistory();
+        item.fontFamily = fontFamilySelect.value;
+        renderElement(item);
+      }
+    });
+
+    btnBold.addEventListener('click', () => {
+      const item = state.items.find(it => it.id === state.selectedId);
+      if (item && item.type === 'text') {
+        saveHistory();
+        item.bold = !item.bold;
+        btnBold.classList.toggle('active', item.bold);
+        renderElement(item);
+      }
+    });
+
+    btnItalic.addEventListener('click', () => {
+      const item = state.items.find(it => it.id === state.selectedId);
+      if (item && item.type === 'text') {
+        saveHistory();
+        item.italic = !item.italic;
+        btnItalic.classList.toggle('active', item.italic);
+        renderElement(item);
+      }
+    });
+
+    document.getElementById('btnAlignRight').addEventListener('click', () => setTextAlign('right'));
+    document.getElementById('btnAlignCenter').addEventListener('click', () => setTextAlign('center'));
+    document.getElementById('btnAlignLeft').addEventListener('click', () => setTextAlign('left'));
+
+    function setTextAlign(align) {
+      const item = state.items.find(it => it.id === state.selectedId);
+      if (item && item.type === 'text') {
+        saveHistory();
+        item.textAlign = align;
+        renderElement(item);
+      }
+    }
+
+    chartTypeSelect.addEventListener('change', () => {
+      const item = state.items.find(it => it.id === state.selectedId);
+      if (item && item.type === 'chart') {
+        saveHistory();
+        item.chartType = chartTypeSelect.value;
+        renderItemChart(item);
+        showToast(`تم التبديل إلى: ${chartTypeSelect.options[chartTypeSelect.selectedIndex].text}`);
+      }
+    });
+
+    chartPaletteSelect.addEventListener('change', () => {
+      const item = state.items.find(it => it.id === state.selectedId);
+      if (item && item.type === 'chart') {
+        saveHistory();
+        item.palette = chartPaletteSelect.value;
+        renderItemChart(item);
+        completeLabTask('task3');
+        showToast('تم تطبيق النمط اللوني المختار');
+      }
+    });
+
+    shapeColorPicker.addEventListener('input', () => {
+      const item = state.items.find(it => it.id === state.selectedId);
+      if (item && item.type === 'shape') {
+        item.color = shapeColorPicker.value;
+        renderElement(item);
+      }
+    });
+    shapeColorPicker.addEventListener('change', saveHistory);
+
+    // Common toolbar actions
+    document.getElementById('btnDeleteElem').addEventListener('click', () => {
+      if (state.selectedId) {
+        saveHistory();
+        state.items = state.items.filter(it => it.id !== state.selectedId);
+        deselectAll();
+        showToast('تم حذف العنصر');
+      }
+    });
+
+    document.getElementById('btnDuplicate').addEventListener('click', () => {
+      const item = state.items.find(it => it.id === state.selectedId);
+      if (item) {
+        saveHistory();
+        const clone = JSON.parse(JSON.stringify(item));
+        clone.id = state.nextId++;
+        clone.x += 25;
+        clone.y += 25;
+        state.items.push(clone);
+        selectItem(clone.id);
+        showToast('تم تكرار العنصر بنجاح');
+      }
+    });
+
+    document.getElementById('btnBringForward').addEventListener('click', () => {
+      const item = state.items.find(it => it.id === state.selectedId);
+      if (item) {
+        saveHistory();
+        const maxZ = Math.max(...state.items.map(it => it.zIndex || 1), 1);
+        item.zIndex = maxZ + 1;
+        renderElement(item);
+        showToast('تم إحضار العنصر إلى المقدمة');
+      }
+    });
+
+    // Keyboard Shortcuts (Delete, Undo, Backspace)
+    window.addEventListener('keydown', (e) => {
+      if (e.target.isContentEditable || e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+
+      if (e.key === 'Delete' || e.key === 'Backspace') {
+        if (state.selectedId) {
+          saveHistory();
+          state.items = state.items.filter(it => it.id !== state.selectedId);
+          deselectAll();
+          showToast('تم حذف العنصر');
+        }
+      } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
+        e.preventDefault();
+        undo();
+      }
+    });
+
+    document.getElementById('btnUndo').addEventListener('click', undo);
+
+    // --- Zoom Controls ---
+    function updateZoom(newZoom) {
+      state.zoom = Math.min(Math.max(newZoom, 0.4), 2.0);
+      designCanvas.style.transform = `scale(${state.zoom})`;
+      zoomPercent.textContent = `${Math.round(state.zoom * 100)}%`;
+    }
+
+    document.getElementById('btnZoomIn').addEventListener('click', () => updateZoom(state.zoom + 0.1));
+    document.getElementById('btnZoomOut').addEventListener('click', () => updateZoom(state.zoom - 0.1));
+    document.getElementById('btnZoomReset').addEventListener('click', () => updateZoom(1.0));
+
+    // --- Canvas Background Management ---
+    function applyCanvasBg(color, shouldSaveHistory = true) {
+      state.canvasBg = color;
+      designCanvas.style.backgroundColor = color;
+      const canvasBgPicker = document.getElementById('canvasBgPicker');
+      if (canvasBgPicker && canvasBgPicker.value !== color) {
+        canvasBgPicker.value = color;
+      }
+      const drawerBgPicker = document.getElementById('drawerBgPicker');
+      if (drawerBgPicker && drawerBgPicker.value !== color) {
+        drawerBgPicker.value = color;
+      }
+      if (shouldSaveHistory) {
+        saveHistory();
+        showToast('تم تغيير لون خلفية التصميم');
+      }
+    }
+
+    const topCanvasBgPicker = document.getElementById('canvasBgPicker');
+    if (topCanvasBgPicker) {
+      topCanvasBgPicker.addEventListener('input', () => {
+        applyCanvasBg(topCanvasBgPicker.value, false);
+      });
+      topCanvasBgPicker.addEventListener('change', () => {
+        applyCanvasBg(topCanvasBgPicker.value, true);
+      });
+    }
+
+    document.querySelectorAll('.bg-preset-dot').forEach(dot => {
+      dot.addEventListener('click', () => {
+        applyCanvasBg(dot.dataset.bg, true);
+      });
+    });
+
+    // --- Side Drawer Management & Sidebar Toggle ---
+    const appSidebar = document.querySelector('nav.app-sidebar');
+    const btnToggleSidebar = document.getElementById('btnToggleSidebar');
+
+    function toggleSidebar() {
+      const isCollapsed = appSidebar.classList.toggle('sidebar-collapsed');
+      if (isCollapsed) {
+        drawerPanel.classList.add('collapsed');
+        navButtons.forEach(b => b.classList.remove('active'));
+        showToast('تم إغلاق القائمة الجانبية');
+      } else {
+        showToast('تم فتح القائمة الجانبية');
+      }
+    }
+
+    if (btnToggleSidebar) {
+      btnToggleSidebar.addEventListener('click', toggleSidebar);
+    }
+
+    // --- New Blank Project Action ---
+    function createNewBlankProject() {
+      if (state.items.length > 0) {
+        if (!confirm('هل تريد بالتأكيد بدء مشروع فارغ جديد؟ سيتم إفراغ مساحة العمل الحالية.')) {
+          return;
+        }
+      }
+      saveHistory();
+      state.items = [];
+      state.selectedId = null;
+      document.getElementById('projectTitle').value = 'مشروع إنفوجرافيك جديد';
+      renderAll();
+      updateToolbarContext();
+      closeDataDrawer();
+      showToast('📄 تم إنشاء مشروع فارغ جديد');
+    }
+
+    const btnNewBlankProject = document.getElementById('btnNewBlankProject');
+    if (btnNewBlankProject) {
+      btnNewBlankProject.addEventListener('click', createNewBlankProject);
+    }
+
+    const navButtons = document.querySelectorAll('.nav-tab-btn');
+    navButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        // If clicking already active tab, toggle drawer closed/open
+        if (btn.classList.contains('active') && !drawerPanel.classList.contains('collapsed')) {
+          drawerPanel.classList.add('collapsed');
+          btn.classList.remove('active');
+          return;
+        }
+
+        navButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        state.activeTab = btn.dataset.tab;
+        drawerPanel.classList.remove('collapsed');
+        renderDrawerContent();
+      });
+    });
+
+    document.getElementById('btnCloseDrawer').addEventListener('click', () => {
+      drawerPanel.classList.add('collapsed');
+      navButtons.forEach(b => b.classList.remove('active'));
+    });
+
+    function renderDrawerContent() {
+      drawerContent.innerHTML = '';
+      if (state.activeTab === 'templates') {
+        drawerTitle.textContent = 'القوالب الجاهزة (Templates)';
+        renderTemplatesDrawer();
+      } else if (state.activeTab === 'elements') {
+        drawerTitle.textContent = 'المخططات والأشكال (Elements)';
+        renderElementsDrawer();
+      } else if (state.activeTab === 'text') {
+        drawerTitle.textContent = 'إضافة النصوص (Text)';
+        renderTextDrawer();
+      } else if (state.activeTab === 'smartart') {
+        drawerTitle.textContent = 'مخططات سمارت آرت للنصوص (SmartArt)';
+        renderSmartArtDrawer();
+      } else if (state.activeTab === 'styles') {
+        drawerTitle.textContent = 'الأنماط والألوان (Styles)';
+        renderStylesDrawer();
+      }
+    }
+
+    // Drawer 1: Templates (4 distinct templates)
+    const TEMPLATES_DATA = [
+      {
+        id: 'sales_report',
+        title: 'تقرير مبيعات فصلي (Bar Chart)',
+        desc: 'قالب إحصائي أنيق لعرض أداء المبيعات مع بطاقات مؤشرات سريعة.',
+        load: () => {
+          saveHistory();
+          state.items = [
+            {
+              id: state.nextId++,
+              type: 'text',
+              x: 50, y: 35, width: 800, height: 50,
+              text: 'تقرير أداء المبيعات السنوية - 2026',
+              fontSize: 28, bold: true, color: '#1e1e24', textAlign: 'center'
+            },
+            {
+              id: state.nextId++,
+              type: 'text',
+              x: 100, y: 85, width: 700, height: 30,
+              text: 'مقارنة إجمالية لإيرادات الفصول الأربعة مع نسبة النمو المحققة',
+              fontSize: 15, bold: false, color: '#6b7280', textAlign: 'center'
+            },
+            {
+              id: state.nextId++,
+              type: 'chart',
+              chartType: 'bar',
+              palette: 'corporate',
+              x: 75, y: 140, width: 750, height: 380,
+              data: [
+                { label: 'الربع الأول', value: 45 },
+                { label: 'الربع الثاني', value: 72 },
+                { label: 'الربع الثالث', value: 58 },
+                { label: 'الربع الرابع', value: 94 }
+              ]
+            }
+          ];
+          completeLabTask('task1');
+        }
+      },
+      {
+        id: 'percentage_donut',
+        title: 'توزيع حصص السوق (Donut Chart)',
+        desc: 'تصميم دائري متناسق لعرض النسب المئوية ومفتاح الرسم.',
+        load: () => {
+          saveHistory();
+          state.items = [
+            {
+              id: state.nextId++,
+              type: 'text',
+              x: 60, y: 40, width: 780, height: 45,
+              text: 'دراسة الحصة السوقية للتطبيقات التعليمية',
+              fontSize: 26, bold: true, color: '#0f172a', textAlign: 'center'
+            },
+            {
+              id: state.nextId++,
+              type: 'text',
+              x: 100, y: 85, width: 700, height: 30,
+              text: 'توزيع نسبي يوضح تفضيلات الطلاب والمعلمين للمنصات الرقمية',
+              fontSize: 14, color: '#64748b', textAlign: 'center'
+            },
+            {
+              id: state.nextId++,
+              type: 'chart',
+              chartType: 'donut',
+              palette: 'warm',
+              x: 100, y: 130, width: 700, height: 400,
+              data: [
+                { label: 'المنصة أ', value: 38 },
+                { label: 'المنصة ب', value: 27 },
+                { label: 'المنصة ج', value: 20 },
+                { label: 'أخرى', value: 15 }
+              ]
+            }
+          ];
+          completeLabTask('task1');
+        }
+      },
+      {
+        id: 'time_series',
+        title: 'التطور الزمني ومؤشرات النمو (Line Chart)',
+        desc: 'رسم بياني خطي حديث لمتابعة تصاعد البيانات عبر الزمن.',
+        load: () => {
+          saveHistory();
+          state.items = [
+            {
+              id: state.nextId++,
+              type: 'text',
+              x: 60, y: 40, width: 780, height: 45,
+              text: 'معدل تفاعل الطلاب في المختبر المدرسي',
+              fontSize: 26, bold: true, color: '#111827', textAlign: 'center'
+            },
+            {
+              id: state.nextId++,
+              type: 'text',
+              x: 100, y: 85, width: 700, height: 30,
+              text: 'تتبع تصاعدي لعدد الساعات التدريبية المنجزة أسبوعياً',
+              fontSize: 14, color: '#6b7280', textAlign: 'center'
+            },
+            {
+              id: state.nextId++,
+              type: 'chart',
+              chartType: 'line',
+              palette: 'cyber',
+              x: 80, y: 140, width: 740, height: 380,
+              data: [
+                { label: 'الأسبوع 1', value: 18 },
+                { label: 'الأسبوع 2', value: 32 },
+                { label: 'الأسبوع 3', value: 45 },
+                { label: 'الأسبوع 4', value: 68 },
+                { label: 'الأسبوع 5', value: 85 }
+              ]
+            }
+          ];
+          completeLabTask('task1');
+        }
+      },
+      {
+        id: 'comparison_infographic',
+        title: 'مقارنة إنفوجرافيك متقدمة (Comparison)',
+        desc: 'تصميم مزدوج يجمع بين مقارنة المخططات والأشكال التوضيحية.',
+        load: () => {
+          saveHistory();
+          state.items = [
+            {
+              id: state.nextId++,
+              type: 'text',
+              x: 50, y: 30, width: 800, height: 45,
+              text: 'مقارنة الكفاءة: التعليم التقليدي مقابل الذكي',
+              fontSize: 26, bold: true, color: '#1e293b', textAlign: 'center'
+            },
+            {
+              id: state.nextId++,
+              type: 'chart',
+              chartType: 'bar',
+              palette: 'nature',
+              x: 50, y: 110, width: 380, height: 420,
+              data: [
+                { label: 'الاستيعاب', value: 65 },
+                { label: 'السرعة', value: 50 },
+                { label: 'التفاعل', value: 55 }
+              ]
+            },
+            {
+              id: state.nextId++,
+              type: 'chart',
+              chartType: 'bar',
+              palette: 'corporate',
+              x: 470, y: 110, width: 380, height: 420,
+              data: [
+                { label: 'الاستيعاب', value: 92 },
+                { label: 'السرعة', value: 88 },
+                { label: 'التفاعل', value: 95 }
+              ]
+            }
+          ];
+          completeLabTask('task1');
+        }
+      },
+      {
+        id: 'infographic_kpi_dashboard',
+        title: 'إنفوجرافيك مؤشرات الأداء (KPI Dashboard)',
+        desc: 'مخطط معلومات بياني متكامل يجمع بين بطاقات الأرقام والمخطط الحلقي ومخطط النمو.',
+        load: () => {
+          saveHistory();
+          state.items = [
+            {
+              id: state.nextId++,
+              type: 'shape',
+              color: '#f8fafc',
+              svg: `<svg viewBox="0 0 100 100" width="100%" height="100%"><rect width="100" height="100" rx="4" fill="currentColor" stroke="#e2e8f0" stroke-width="1"/></svg>`,
+              x: 30, y: 20, width: 840, height: 560, zIndex: 1
+            },
+            {
+              id: state.nextId++,
+              type: 'text',
+              x: 50, y: 35, width: 800, height: 40,
+              text: 'لوحة معلومات الإنجاز الأكاديمي والأنشطة المدرسية',
+              fontSize: 24, bold: true, color: '#0f172a', textAlign: 'center', zIndex: 2
+            },
+            {
+              id: state.nextId++,
+              type: 'text',
+              x: 50, y: 75, width: 800, height: 25,
+              text: 'ملخص المؤشرات الرئيسية ونسب الإنجاز للفصل الدراسي الحالي',
+              fontSize: 13, color: '#64748b', textAlign: 'center', zIndex: 2
+            },
+            {
+              id: state.nextId++,
+              type: 'shape',
+              color: '#eff6ff',
+              svg: `<svg viewBox="0 0 100 100" width="100%" height="100%"><rect width="100" height="100" rx="8" fill="currentColor"/></svg>`,
+              x: 50, y: 110, width: 250, height: 85, zIndex: 2
+            },
+            {
+              id: state.nextId++,
+              type: 'text',
+              x: 60, y: 120, width: 230, height: 35,
+              text: '94.8%',
+              fontSize: 26, bold: true, color: '#2563eb', textAlign: 'center', zIndex: 3
+            },
+            {
+              id: state.nextId++,
+              type: 'text',
+              x: 60, y: 158, width: 230, height: 25,
+              text: 'معدل الحضور والالتزام',
+              fontSize: 12, bold: true, color: '#1e40af', textAlign: 'center', zIndex: 3
+            },
+            {
+              id: state.nextId++,
+              type: 'shape',
+              color: '#ecfdf5',
+              svg: `<svg viewBox="0 0 100 100" width="100%" height="100%"><rect width="100" height="100" rx="8" fill="currentColor"/></svg>`,
+              x: 325, y: 110, width: 250, height: 85, zIndex: 2
+            },
+            {
+              id: state.nextId++,
+              type: 'text',
+              x: 335, y: 120, width: 230, height: 35,
+              text: '1,420',
+              fontSize: 26, bold: true, color: '#059669', textAlign: 'center', zIndex: 3
+            },
+            {
+              id: state.nextId++,
+              type: 'text',
+              x: 335, y: 158, width: 230, height: 25,
+              text: 'ساعة تدريب عملي منجزة',
+              fontSize: 12, bold: true, color: '#065f46', textAlign: 'center', zIndex: 3
+            },
+            {
+              id: state.nextId++,
+              type: 'shape',
+              color: '#fdf4ff',
+              svg: `<svg viewBox="0 0 100 100" width="100%" height="100%"><rect width="100" height="100" rx="8" fill="currentColor"/></svg>`,
+              x: 600, y: 110, width: 250, height: 85, zIndex: 2
+            },
+            {
+              id: state.nextId++,
+              type: 'text',
+              x: 610, y: 120, width: 230, height: 35,
+              text: '+38%',
+              fontSize: 26, bold: true, color: '#9333ea', textAlign: 'center', zIndex: 3
+            },
+            {
+              id: state.nextId++,
+              type: 'text',
+              x: 610, y: 158, width: 230, height: 25,
+              text: 'نمو المشاريع المبتكرة',
+              fontSize: 12, bold: true, color: '#6b21a8', textAlign: 'center', zIndex: 3
+            },
+            {
+              id: state.nextId++,
+              type: 'chart',
+              chartType: 'donut',
+              palette: 'corporate',
+              x: 50, y: 215, width: 370, height: 335, zIndex: 2,
+              data: [
+                { label: 'العلوم والتقنية', value: 45 },
+                { label: 'الرياضيات', value: 25 },
+                { label: 'الفنون والإبداع', value: 20 },
+                { label: 'أخرى', value: 10 }
+              ]
+            },
+            {
+              id: state.nextId++,
+              type: 'chart',
+              chartType: 'bar',
+              palette: 'cyber',
+              x: 440, y: 215, width: 410, height: 335, zIndex: 2,
+              data: [
+                { label: 'الشهر 1', value: 48 },
+                { label: 'الشهر 2', value: 65 },
+                { label: 'الشهر 3', value: 82 },
+                { label: 'الشهر 4', value: 96 }
+              ]
+            }
+          ];
+          completeLabTask('task1');
+        }
+      },
+      {
+        id: 'infographic_steps_process',
+        title: 'إنفوجرافيك مراحل وخطوات (Process Infographic)',
+        desc: 'مخطط معلومات يعرض مسار عمل متسلسل من 4 خطوات مدعوم بمخطط خط بياني لمعدل الإنجاز.',
+        load: () => {
+          saveHistory();
+          state.items = [
+            {
+              id: state.nextId++,
+              type: 'text',
+              x: 50, y: 25, width: 800, height: 40,
+              text: 'مراحل تنفيذ مشروع المعمل الذكي (4 خطوات للنجاح)',
+              fontSize: 25, bold: true, color: '#111827', textAlign: 'center', zIndex: 2
+            },
+            {
+              id: state.nextId++,
+              type: 'shape',
+              color: '#3b82f6',
+              svg: `<svg viewBox="0 0 100 100" width="100%" height="100%"><circle cx="50" cy="50" r="46" fill="currentColor"/></svg>`,
+              x: 730, y: 80, width: 50, height: 50, zIndex: 2
+            },
+            {
+              id: state.nextId++,
+              type: 'text',
+              x: 730, y: 92, width: 50, height: 30,
+              text: '1', fontSize: 20, bold: true, color: '#ffffff', textAlign: 'center', zIndex: 3
+            },
+            {
+              id: state.nextId++,
+              type: 'text',
+              x: 660, y: 135, width: 190, height: 40,
+              text: '1. التخطيط وجمع البيانات', fontSize: 13, bold: true, color: '#1e3a8a', textAlign: 'center', zIndex: 2
+            },
+            {
+              id: state.nextId++,
+              type: 'shape',
+              color: '#06b6d4',
+              svg: `<svg viewBox="0 0 100 100" width="100%" height="100%"><circle cx="50" cy="50" r="46" fill="currentColor"/></svg>`,
+              x: 520, y: 80, width: 50, height: 50, zIndex: 2
+            },
+            {
+              id: state.nextId++,
+              type: 'text',
+              x: 520, y: 92, width: 50, height: 30,
+              text: '2', fontSize: 20, bold: true, color: '#ffffff', textAlign: 'center', zIndex: 3
+            },
+            {
+              id: state.nextId++,
+              type: 'text',
+              x: 450, y: 135, width: 190, height: 40,
+              text: '2. تحليل واختبار الفرضيات', fontSize: 13, bold: true, color: '#0e7490', textAlign: 'center', zIndex: 2
+            },
+            {
+              id: state.nextId++,
+              type: 'shape',
+              color: '#8b5cf6',
+              svg: `<svg viewBox="0 0 100 100" width="100%" height="100%"><circle cx="50" cy="50" r="46" fill="currentColor"/></svg>`,
+              x: 310, y: 80, width: 50, height: 50, zIndex: 2
+            },
+            {
+              id: state.nextId++,
+              type: 'text',
+              x: 310, y: 92, width: 50, height: 30,
+              text: '3', fontSize: 20, bold: true, color: '#ffffff', textAlign: 'center', zIndex: 3
+            },
+            {
+              id: state.nextId++,
+              type: 'text',
+              x: 240, y: 135, width: 190, height: 40,
+              text: '3. التصميم والتمثيل البياني', fontSize: 13, bold: true, color: '#5b21b6', textAlign: 'center', zIndex: 2
+            },
+            {
+              id: state.nextId++,
+              type: 'shape',
+              color: '#10b981',
+              svg: `<svg viewBox="0 0 100 100" width="100%" height="100%"><circle cx="50" cy="50" r="46" fill="currentColor"/></svg>`,
+              x: 100, y: 80, width: 50, height: 50, zIndex: 2
+            },
+            {
+              id: state.nextId++,
+              type: 'text',
+              x: 100, y: 92, width: 50, height: 30,
+              text: '4', fontSize: 20, bold: true, color: '#ffffff', textAlign: 'center', zIndex: 3
+            },
+            {
+              id: state.nextId++,
+              type: 'text',
+              x: 30, y: 135, width: 190, height: 40,
+              text: '4. استخلاص ونشر النتائج', fontSize: 13, bold: true, color: '#065f46', textAlign: 'center', zIndex: 2
+            },
+            {
+              id: state.nextId++,
+              type: 'chart',
+              chartType: 'line',
+              palette: 'cyber',
+              x: 75, y: 200, width: 750, height: 360, zIndex: 2,
+              data: [
+                { label: 'المرحلة 1', value: 25 },
+                { label: 'المرحلة 2', value: 55 },
+                { label: 'المرحلة 3', value: 80 },
+                { label: 'المرحلة 4', value: 100 }
+              ]
+            }
+          ];
+          completeLabTask('task1');
+        }
+      },
+      {
+        id: 'infographic_survey_facts',
+        title: 'إنفوجرافيك حقائق واستطلاع رأي (Survey Facts)',
+        desc: 'مخطط معلومات يلخص نتائج استطلاع مدرسي مع نسب مئوية ورسم دائري ومخطط أعمدة.',
+        load: () => {
+          saveHistory();
+          state.items = [
+            {
+              id: state.nextId++,
+              type: 'text',
+              x: 50, y: 25, width: 800, height: 45,
+              text: 'حقائق وأرقام: استطلاع رضا الطلاب عن البيئة المدرسية',
+              fontSize: 24, bold: true, color: '#1e293b', textAlign: 'center'
+            },
+            {
+              id: state.nextId++,
+              type: 'text',
+              x: 70, y: 70, width: 760, height: 30,
+              text: 'عينة شملت 500 طالب وطالبة لتقييم المرافق والأنشطة الإثرائية',
+              fontSize: 14, color: '#64748b', textAlign: 'center'
+            },
+            {
+              id: state.nextId++,
+              type: 'chart',
+              chartType: 'pie',
+              palette: 'nature',
+              x: 50, y: 120, width: 380, height: 400,
+              data: [
+                { label: 'راضٍ تماماً', value: 52 },
+                { label: 'راضٍ', value: 33 },
+                { label: 'محايد', value: 11 },
+                { label: 'غير راضٍ', value: 4 }
+              ]
+            },
+            {
+              id: state.nextId++,
+              type: 'chart',
+              chartType: 'bar',
+              palette: 'warm',
+              x: 470, y: 120, width: 380, height: 400,
+              data: [
+                { label: 'المكتبة الذكية', value: 88 },
+                { label: 'مختبر الحاسوب', value: 92 },
+                { label: 'الصالة الرياضية', value: 76 },
+                { label: 'الورش الفنية', value: 81 }
+              ]
+            }
+          ];
+          completeLabTask('task1');
+        }
+      }
+    ];
+
+    function renderTemplatesDrawer() {
+      // Add Blank Project Quick Button at Top of Templates Drawer
+      const blankCard = document.createElement('div');
+      blankCard.className = 'template-card';
+      blankCard.style.border = '1px dashed #00c4cc';
+      blankCard.style.background = 'rgba(0, 196, 204, 0.08)';
+      blankCard.innerHTML = `
+        <div style="display:flex; align-items:center; gap:8px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00c4cc" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <h4 style="color:#00c4cc; margin:0;">البدء بصفحة فارغة (Blank Project)</h4>
+        </div>
+        <p style="margin:4px 0 0 0; color:#94a3b8;">إنشاء تصميم أبيض فارغ جديد بدون أي عناصر سابقة.</p>
+      `;
+      blankCard.addEventListener('click', createNewBlankProject);
+      drawerContent.appendChild(blankCard);
+
+      TEMPLATES_DATA.forEach(t => {
+        const card = document.createElement('div');
+        card.className = 'template-card';
+        card.innerHTML = `
+          <h4>${t.title}</h4>
+          <p>${t.desc}</p>
+        `;
+        card.addEventListener('click', () => {
+          t.load();
+          renderAll();
+          deselectAll();
+          showToast(`تم تحميل: ${t.title}`);
+        });
+        drawerContent.appendChild(card);
+      });
+    }
+
+    // Drawer 2: Elements & Charts
+    function renderElementsDrawer() {
+      const sectionCharts = document.createElement('div');
+      sectionCharts.innerHTML = `<h5 style="color:#d1d5db; font-size:0.8rem; margin-bottom:8px;">مخططات بيانية جديدة</h5>`;
+      const grid = document.createElement('div');
+      grid.className = 'element-grid';
+
+      const charts = [
+        { type: 'bar', label: 'مخطط أعمدة (Bar)' },
+        { type: 'pie', label: 'مخطط دائري (Pie)' },
+        { type: 'donut', label: 'مخطط حلقي (Donut)' },
+        { type: 'line', label: 'مخطط خطي (Line)' }
+      ];
+
+      charts.forEach(c => {
+        const btn = document.createElement('button');
+        btn.className = 'element-item-btn';
+        btn.innerHTML = `
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#00c4cc" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <path d="M7 16v-4m5 4V8m5 8v-6"/>
+          </svg>
+          <span>${c.label}</span>
+        `;
+        btn.addEventListener('click', () => {
+          saveHistory();
+          const newChart = {
+            id: state.nextId++,
+            type: 'chart',
+            chartType: c.type,
+            palette: 'corporate',
+            x: 200,
+            y: 120,
+            width: 500,
+            height: 320,
+            data: [
+              { label: 'عنصر 1', value: 30 },
+              { label: 'عنصر 2', value: 55 },
+              { label: 'عنصر 3', value: 42 },
+              { label: 'عنصر 4', value: 78 }
+            ]
+          };
+          state.items.push(newChart);
+          renderAll();
+          selectItem(newChart.id);
+          completeLabTask('task1');
+          showToast('تمت إضافة المخطط إلى مساحة العمل');
+        });
+        grid.appendChild(btn);
+      });
+
+      sectionCharts.appendChild(grid);
+      drawerContent.appendChild(sectionCharts);
+
+      // Geometric Shapes
+      const sectionShapes = document.createElement('div');
+      sectionShapes.innerHTML = `<h5 style="color:#d1d5db; font-size:0.8rem; margin-top:16px; margin-bottom:8px;">أشكال هندسية وأيقونات</h5>`;
+      const shapeGrid = document.createElement('div');
+      shapeGrid.className = 'element-grid';
+
+      const SHAPES = [
+        {
+          name: 'مستطيل / بطاقة',
+          svg: `<svg viewBox="0 0 100 100" width="100%" height="100%"><rect width="100" height="100" rx="10" fill="currentColor"/></svg>`
+        },
+        {
+          name: 'دائرة / قرص',
+          svg: `<svg viewBox="0 0 100 100" width="100%" height="100%"><circle cx="50" cy="50" r="48" fill="currentColor"/></svg>`
+        },
+        {
+          name: 'نجمة تقييم',
+          svg: `<svg viewBox="0 0 24 24" width="100%" height="100%" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`
+        },
+        {
+          name: 'سهم توجيهي',
+          svg: `<svg viewBox="0 0 24 24" width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`
+        }
+      ];
+
+      SHAPES.forEach(s => {
+        const btn = document.createElement('button');
+        btn.className = 'element-item-btn';
+        btn.innerHTML = `
+          <div style="width:28px; height:28px; color:var(--canva-purple);">${s.svg}</div>
+          <span>${s.name}</span>
+        `;
+        btn.addEventListener('click', () => {
+          saveHistory();
+          const newShape = {
+            id: state.nextId++,
+            type: 'shape',
+            color: '#7d2ae8',
+            svg: s.svg,
+            x: 350,
+            y: 200,
+            width: 120,
+            height: 120
+          };
+          state.items.push(newShape);
+          renderAll();
+          selectItem(newShape.id);
+          showToast('تمت إضافة الشكل إلى التصميم');
+        });
+        shapeGrid.appendChild(btn);
+      });
+
+      sectionShapes.appendChild(shapeGrid);
+      drawerContent.appendChild(sectionShapes);
+    }
+
+    // Drawer 3: Text
+    function renderTextDrawer() {
+      const texts = [
+        { label: 'إضافة عنوان رئيسي (Heading)', size: 32, bold: true, text: 'عنوان رئيسي جذاب' },
+        { label: 'إضافة عنوان فرعي (Subheading)', size: 20, bold: true, text: 'عنوان فرعي يوضح الفكرة' },
+        { label: 'إضافة نص أساسي / فقرة (Body)', size: 14, bold: false, text: 'اكتب هنا تفاصيل وشرح الإنفوجرافيك أو البيانات المرفقة...' }
+      ];
+
+      texts.forEach(t => {
+        const btn = document.createElement('button');
+        btn.className = 'text-add-btn';
+        btn.innerHTML = `
+          <div>
+            <div style="font-size: ${Math.min(t.size, 18)}px; font-weight: ${t.bold ? 'bold' : 'normal'}; color: white;">${t.label}</div>
+          </div>
+          <span style="font-size: 1.2rem; color: #9ca3af;">+</span>
+        `;
+        btn.addEventListener('click', () => {
+          saveHistory();
+          const newText = {
+            id: state.nextId++,
+            type: 'text',
+            text: t.text,
+            fontSize: t.size,
+            bold: t.bold,
+            italic: false,
+            color: '#111827',
+            textAlign: 'right',
+            x: 250,
+            y: 180,
+            width: 400,
+            height: 60
+          };
+          state.items.push(newText);
+          renderAll();
+          selectItem(newText.id);
+          showToast('تمت إضافة النص بنجاح');
+        });
+        drawerContent.appendChild(btn);
+      });
+    }
+
+    // Drawer 3.5: SmartArt Diagrams for Textual Data
+    function renderSmartArtDrawer() {
+      const smartArtTypes = [
+        {
+          id: 'process_flow',
+          title: 'مسار تدفق أفقي (Process Flow)',
+          desc: '3 خطوات متتابعة بأسهم توجيهية لتمثيل الإجراءات والمراحل.',
+          badge: 'عمليات',
+          builder: () => [
+            {
+              id: state.nextId++, type: 'text', x: 50, y: 35, width: 800, height: 40,
+              text: 'مراحل خطة العمل (مخطط تدفق العمليات)', fontSize: 24, bold: true, color: '#1e293b', textAlign: 'center'
+            },
+            // Step 1 (Right)
+            {
+              id: state.nextId++, type: 'shape', color: '#3b82f6',
+              svg: `<svg viewBox="0 0 100 100" width="100%" height="100%"><rect width="100" height="100" rx="10" fill="currentColor"/></svg>`,
+              x: 605, y: 130, width: 220, height: 320
+            },
+            {
+              id: state.nextId++, type: 'text', x: 615, y: 160, width: 200, height: 35,
+              text: '01. التخطيط', fontSize: 18, bold: true, color: '#ffffff', textAlign: 'center'
+            },
+            {
+              id: state.nextId++, type: 'text', x: 620, y: 220, width: 190, height: 180,
+              text: 'تحديد الأهداف الذكية، توزيع الأدوار على الفريق، ووضع الجدول الزمني للتنفيذ.', fontSize: 14, bold: false, color: '#e0f2fe', textAlign: 'center'
+            },
+            // Arrow 1 -> 2
+            {
+              id: state.nextId++, type: 'shape', color: '#94a3b8',
+              svg: `<svg viewBox="0 0 24 24" width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="3"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>`,
+              x: 550, y: 265, width: 40, height: 40
+            },
+            // Step 2 (Center)
+            {
+              id: state.nextId++, type: 'shape', color: '#06b6d4',
+              svg: `<svg viewBox="0 0 100 100" width="100%" height="100%"><rect width="100" height="100" rx="10" fill="currentColor"/></svg>`,
+              x: 340, y: 130, width: 220, height: 320
+            },
+            {
+              id: state.nextId++, type: 'text', x: 350, y: 160, width: 200, height: 35,
+              text: '02. التنفيذ', fontSize: 18, bold: true, color: '#ffffff', textAlign: 'center'
+            },
+            {
+              id: state.nextId++, type: 'text', x: 355, y: 220, width: 190, height: 180,
+              text: 'بدء التجارب العملية، جمع البيانات الأولية، وتوثيق الملاحظات الميدانية بدقة.', fontSize: 14, bold: false, color: '#ecfeff', textAlign: 'center'
+            },
+            // Arrow 2 -> 3
+            {
+              id: state.nextId++, type: 'shape', color: '#94a3b8',
+              svg: `<svg viewBox="0 0 24 24" width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="3"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>`,
+              x: 285, y: 265, width: 40, height: 40
+            },
+            // Step 3 (Left)
+            {
+              id: state.nextId++, type: 'shape', color: '#10b981',
+              svg: `<svg viewBox="0 0 100 100" width="100%" height="100%"><rect width="100" height="100" rx="10" fill="currentColor"/></svg>`,
+              x: 75, y: 130, width: 220, height: 320
+            },
+            {
+              id: state.nextId++, type: 'text', x: 85, y: 160, width: 200, height: 35,
+              text: '03. التقييم', fontSize: 18, bold: true, color: '#ffffff', textAlign: 'center'
+            },
+            {
+              id: state.nextId++, type: 'text', x: 90, y: 220, width: 190, height: 180,
+              text: 'مراجعة المخرجات النهائية، قياس مؤشرات الجودة، وتقديم التقرير النهائي.', fontSize: 14, bold: false, color: '#f0fdf4', textAlign: 'center'
+            }
+          ]
+        },
+        {
+          id: 'hierarchy_tree',
+          title: 'هيكل شجري وتصنيفي (Hierarchy Tree)',
+          desc: 'عنصر رئيسي يتفرع إلى مستويات فرعية متوازنة داخل مساحة العمل.',
+          badge: 'هيكلي',
+          builder: () => [
+            {
+              id: state.nextId++, type: 'text', x: 50, y: 30, width: 800, height: 40,
+              text: 'الهيكل التنظيمي لفريق المشروع المدرسي', fontSize: 24, bold: true, color: '#0f172a', textAlign: 'center'
+            },
+            // Root
+            {
+              id: state.nextId++, type: 'shape', color: '#7d2ae8',
+              svg: `<svg viewBox="0 0 100 100" width="100%" height="100%"><rect width="100" height="100" rx="12" fill="currentColor"/></svg>`,
+              x: 320, y: 90, width: 260, height: 75
+            },
+            {
+              id: state.nextId++, type: 'text', x: 330, y: 104, width: 240, height: 25,
+              text: 'قائد الفريق (Team Leader)', fontSize: 16, bold: true, color: '#ffffff', textAlign: 'center'
+            },
+            {
+              id: state.nextId++, type: 'text', x: 330, y: 130, width: 240, height: 25,
+              text: 'الإشراف العام وتنسيق المهام', fontSize: 12, color: '#e9d5ff', textAlign: 'center'
+            },
+            // Branch 1 (Right)
+            {
+              id: state.nextId++, type: 'shape', color: '#0284c7',
+              svg: `<svg viewBox="0 0 100 100" width="100%" height="100%"><rect width="100" height="100" rx="10" fill="currentColor"/></svg>`,
+              x: 595, y: 220, width: 245, height: 120
+            },
+            {
+              id: state.nextId++, type: 'text', x: 605, y: 235, width: 225, height: 25,
+              text: 'مسؤول البحث والبيانات', fontSize: 15, bold: true, color: '#ffffff', textAlign: 'center'
+            },
+            {
+              id: state.nextId++, type: 'text', x: 605, y: 268, width: 225, height: 60,
+              text: 'جمع الإحصاءات والاستبيانات وتحليل النتائج الرقمية.', fontSize: 12, color: '#e0f2fe', textAlign: 'center'
+            },
+            // Branch 2 (Center)
+            {
+              id: state.nextId++, type: 'shape', color: '#0d9488',
+              svg: `<svg viewBox="0 0 100 100" width="100%" height="100%"><rect width="100" height="100" rx="10" fill="currentColor"/></svg>`,
+              x: 328, y: 220, width: 245, height: 120
+            },
+            {
+              id: state.nextId++, type: 'text', x: 338, y: 235, width: 225, height: 25,
+              text: 'مسؤول التصميم والإنفوجرافيك', fontSize: 15, bold: true, color: '#ffffff', textAlign: 'center'
+            },
+            {
+              id: state.nextId++, type: 'text', x: 338, y: 268, width: 225, height: 60,
+              text: 'بناء المخططات البصرية والرسوم التفاعلية والعرض.', fontSize: 12, color: '#ccfbf1', textAlign: 'center'
+            },
+            // Branch 3 (Left)
+            {
+              id: state.nextId++, type: 'shape', color: '#ea580c',
+              svg: `<svg viewBox="0 0 100 100" width="100%" height="100%"><rect width="100" height="100" rx="10" fill="currentColor"/></svg>`,
+              x: 60, y: 220, width: 245, height: 120
+            },
+            {
+              id: state.nextId++, type: 'text', x: 70, y: 235, width: 225, height: 25,
+              text: 'مسؤول التوثيق والعرض', fontSize: 15, bold: true, color: '#ffffff', textAlign: 'center'
+            },
+            {
+              id: state.nextId++, type: 'text', x: 70, y: 268, width: 225, height: 60,
+              text: 'صياغة التقرير النهائي وإعداد العرض التقديمي للجنة.', fontSize: 12, color: '#ffedd5', textAlign: 'center'
+            }
+          ]
+        },
+        {
+          id: 'cycle_loop',
+          title: 'دورة تفاعلية مغلقة (Cycle Loop)',
+          desc: 'مخطط دائري من 4 بطاقات تدور حول هدف محوري متجدد.',
+          badge: 'دائري',
+          builder: () => [
+            {
+              id: state.nextId++, type: 'text', x: 50, y: 20, width: 800, height: 35,
+              text: 'دورة التحسين والتطوير المستمر (PDCA Cycle)', fontSize: 23, bold: true, color: '#1e293b', textAlign: 'center'
+            },
+            // Center Core
+            {
+              id: state.nextId++, type: 'shape', color: '#1e293b',
+              svg: `<svg viewBox="0 0 100 100" width="100%" height="100%"><circle cx="50" cy="50" r="48" fill="currentColor"/></svg>`,
+              x: 380, y: 225, width: 140, height: 140
+            },
+            {
+              id: state.nextId++, type: 'text', x: 390, y: 268, width: 120, height: 55,
+              text: 'جودة التعلم المستمر', fontSize: 15, bold: true, color: '#ffffff', textAlign: 'center'
+            },
+            // Top Node
+            {
+              id: state.nextId++, type: 'shape', color: '#ef4444',
+              svg: `<svg viewBox="0 0 100 100" width="100%" height="100%"><rect width="100" height="100" rx="8" fill="currentColor"/></svg>`,
+              x: 350, y: 70, width: 200, height: 90
+            },
+            {
+              id: state.nextId++, type: 'text', x: 360, y: 82, width: 180, height: 25,
+              text: '1. خطط (Plan)', fontSize: 15, bold: true, color: '#ffffff', textAlign: 'center'
+            },
+            {
+              id: state.nextId++, type: 'text', x: 360, y: 108, width: 180, height: 45,
+              text: 'تشخيص المشكلة وتحديد خطة العمل.', fontSize: 12, color: '#fee2e2', textAlign: 'center'
+            },
+            // Right Node
+            {
+              id: state.nextId++, type: 'shape', color: '#f59e0b',
+              svg: `<svg viewBox="0 0 100 100" width="100%" height="100%"><rect width="100" height="100" rx="8" fill="currentColor"/></svg>`,
+              x: 620, y: 250, width: 200, height: 90
+            },
+            {
+              id: state.nextId++, type: 'text', x: 630, y: 262, width: 180, height: 25,
+              text: '2. نفّذ (Do)', fontSize: 15, bold: true, color: '#ffffff', textAlign: 'center'
+            },
+            {
+              id: state.nextId++, type: 'text', x: 630, y: 288, width: 180, height: 45,
+              text: 'تطبيق الإجراءات وجمع الأدلة بدقة.', fontSize: 12, color: '#fef3c7', textAlign: 'center'
+            },
+            // Bottom Node
+            {
+              id: state.nextId++, type: 'shape', color: '#10b981',
+              svg: `<svg viewBox="0 0 100 100" width="100%" height="100%"><rect width="100" height="100" rx="8" fill="currentColor"/></svg>`,
+              x: 350, y: 430, width: 200, height: 90
+            },
+            {
+              id: state.nextId++, type: 'text', x: 360, y: 442, width: 180, height: 25,
+              text: '3. افحص (Check)', fontSize: 15, bold: true, color: '#ffffff', textAlign: 'center'
+            },
+            {
+              id: state.nextId++, type: 'text', x: 360, y: 468, width: 180, height: 45,
+              text: 'مقارنة النتائج المحققة بالأهداف.', fontSize: 12, color: '#d1fae5', textAlign: 'center'
+            },
+            // Left Node
+            {
+              id: state.nextId++, type: 'shape', color: '#6366f1',
+              svg: `<svg viewBox="0 0 100 100" width="100%" height="100%"><rect width="100" height="100" rx="8" fill="currentColor"/></svg>`,
+              x: 80, y: 250, width: 200, height: 90
+            },
+            {
+              id: state.nextId++, type: 'text', x: 90, y: 262, width: 180, height: 25,
+              text: '4. طوّر (Act)', fontSize: 15, bold: true, color: '#ffffff', textAlign: 'center'
+            },
+            {
+              id: state.nextId++, type: 'text', x: 90, y: 288, width: 180, height: 45,
+              text: 'اعتماد التحسينات ومعالجة القصور.', fontSize: 12, color: '#e0e7ff', textAlign: 'center'
+            }
+          ]
+        },
+        {
+          id: 'features_matrix',
+          title: 'مصفوفة شبكية رباعية (2x2 Matrix)',
+          desc: 'تحليل رباعي للمقارنة وتوزيع المفاهيم (مثل SWOT أو مصفوفة الأولويات).',
+          badge: 'مصفوفة',
+          builder: () => [
+            {
+              id: state.nextId++, type: 'text', x: 50, y: 25, width: 800, height: 35,
+              text: 'مصفوفة تحليل الأولويات للمشاريع المدرسية', fontSize: 24, bold: true, color: '#1e293b', textAlign: 'center'
+            },
+            // Quadrant 1 (Top-Right: High Impact, Urgent)
+            {
+              id: state.nextId++, type: 'shape', color: '#fee2e2',
+              svg: `<svg viewBox="0 0 100 100" width="100%" height="100%"><rect width="100" height="100" rx="8" fill="currentColor" stroke="#ef4444" stroke-width="2"/></svg>`,
+              x: 470, y: 75, width: 370, height: 205
+            },
+            {
+              id: state.nextId++, type: 'text', x: 485, y: 90, width: 340, height: 30,
+              text: 'عاجل وذو أثر مرتفع (نفّذ فوراً)', fontSize: 16, bold: true, color: '#991b1b', textAlign: 'right'
+            },
+            {
+              id: state.nextId++, type: 'text', x: 485, y: 125, width: 340, height: 140,
+              text: '• حل المشكلات التقنية الطارئة في المعمل\n• تسليم المشاريع في مواعيدها النهائية\n• إجراء اختبارات الأمان والسلامة المخبرية', fontSize: 13, bold: false, color: '#7f1d1d', textAlign: 'right'
+            },
+            // Quadrant 2 (Top-Left: High Impact, Not Urgent)
+            {
+              id: state.nextId++, type: 'shape', color: '#dbeafe',
+              svg: `<svg viewBox="0 0 100 100" width="100%" height="100%"><rect width="100" height="100" rx="8" fill="currentColor" stroke="#3b82f6" stroke-width="2"/></svg>`,
+              x: 60, y: 75, width: 370, height: 205
+            },
+            {
+              id: state.nextId++, type: 'text', x: 75, y: 90, width: 340, height: 30,
+              text: 'هام وغير عاجل (خطط له بذكاء)', fontSize: 16, bold: true, color: '#1e40af', textAlign: 'right'
+            },
+            {
+              id: state.nextId++, type: 'text', x: 75, y: 125, width: 340, height: 140,
+              text: '• بناء مهارات الطلاب البرمجية والإبداعية\n• تحديث أجهزة ومعدات المختبر\n• بناء شراكات مع معارض الابتكار والعلوم', fontSize: 13, bold: false, color: '#1e3a8a', textAlign: 'right'
+            },
+            // Quadrant 3 (Bottom-Right: Low Impact, Urgent)
+            {
+              id: state.nextId++, type: 'shape', color: '#fef3c7',
+              svg: `<svg viewBox="0 0 100 100" width="100%" height="100%"><rect width="100" height="100" rx="8" fill="currentColor" stroke="#f59e0b" stroke-width="2"/></svg>`,
+              x: 470, y: 310, width: 370, height: 205
+            },
+            {
+              id: state.nextId++, type: 'text', x: 485, y: 325, width: 340, height: 30,
+              text: 'عاجل وذو أثر منخفض (فوّض أو اختصر)', fontSize: 16, bold: true, color: '#92400e', textAlign: 'right'
+            },
+            {
+              id: state.nextId++, type: 'text', x: 485, y: 360, width: 340, height: 140,
+              text: '• الرد على الاستفسارات الروتينية المتكررة\n• طباعة الأوراق والمذكرات الإضافية\n• حضور الاجتماعات الجانبية غير المجدولة', fontSize: 13, bold: false, color: '#78350f', textAlign: 'right'
+            },
+            // Quadrant 4 (Bottom-Left: Low Impact, Not Urgent)
+            {
+              id: state.nextId++, type: 'shape', color: '#f1f5f9',
+              svg: `<svg viewBox="0 0 100 100" width="100%" height="100%"><rect width="100" height="100" rx="8" fill="currentColor" stroke="#94a3b8" stroke-width="2"/></svg>`,
+              x: 60, y: 310, width: 370, height: 205
+            },
+            {
+              id: state.nextId++, type: 'text', x: 75, y: 325, width: 340, height: 30,
+              text: 'غير عاجل وغير مهم (تجنبه واحذفه)', fontSize: 16, bold: true, color: '#475569', textAlign: 'right'
+            },
+            {
+              id: state.nextId++, type: 'text', x: 75, y: 360, width: 340, height: 140,
+              text: '• إضاعة الوقت في التعديلات التجميلية الزائدة\n• الأنشطة غير المرتبطة بأهداف الدرس\n• تكرار المهام المنجزة بدون مبرر', fontSize: 13, bold: false, color: '#334155', textAlign: 'right'
+            }
+          ]
+        },
+        {
+          id: 'pyramid_levels',
+          title: 'هرم التدرج والمستويات (Pyramid Levels)',
+          desc: 'مخطط هرمي من 3 مستويات لعرض الأولويات أو هرم ماسلو أو بلوم للتعلم.',
+          badge: 'هرمي',
+          builder: () => [
+            {
+              id: state.nextId++, type: 'text', x: 50, y: 25, width: 800, height: 35,
+              text: 'هرم المهارات التقنية والتعلم الرقمي', fontSize: 24, bold: true, color: '#1e293b', textAlign: 'center'
+            },
+            // Level 1: Top (Apex)
+            {
+              id: state.nextId++, type: 'shape', color: '#8b5cf6',
+              svg: `<svg viewBox="0 0 100 100" width="100%" height="100%"><rect width="100" height="100" rx="8" fill="currentColor"/></svg>`,
+              x: 275, y: 80, width: 350, height: 105
+            },
+            {
+              id: state.nextId++, type: 'text', x: 285, y: 95, width: 330, height: 30,
+              text: 'المستوى 3: الابتكار وحل المشكلات', fontSize: 16, bold: true, color: '#ffffff', textAlign: 'center'
+            },
+            {
+              id: state.nextId++, type: 'text', x: 285, y: 130, width: 330, height: 50,
+              text: 'ابتكار حلول برمجية جديدة وتصميم أنظمة متكاملة مستقلة.', fontSize: 12, color: '#ede9fe', textAlign: 'center'
+            },
+            // Level 2: Middle
+            {
+              id: state.nextId++, type: 'shape', color: '#3b82f6',
+              svg: `<svg viewBox="0 0 100 100" width="100%" height="100%"><rect width="100" height="100" rx="8" fill="currentColor"/></svg>`,
+              x: 185, y: 210, width: 530, height: 110
+            },
+            {
+              id: state.nextId++, type: 'text', x: 195, y: 225, width: 510, height: 30,
+              text: 'المستوى 2: التحليل والتطبيق العملي', fontSize: 16, bold: true, color: '#ffffff', textAlign: 'center'
+            },
+            {
+              id: state.nextId++, type: 'text', x: 195, y: 260, width: 510, height: 50,
+              text: 'ربط المفاهيم، استخراج الدلالات من البيانات، وتطبيق الخوارزميات في بيئة العمل.', fontSize: 12, color: '#dbeafe', textAlign: 'center'
+            },
+            // Level 3: Base
+            {
+              id: state.nextId++, type: 'shape', color: '#10b981',
+              svg: `<svg viewBox="0 0 100 100" width="100%" height="100%"><rect width="100" height="100" rx="8" fill="currentColor"/></svg>`,
+              x: 95, y: 345, width: 710, height: 120
+            },
+            {
+              id: state.nextId++, type: 'text', x: 105, y: 362, width: 690, height: 30,
+              text: 'المستوى 1: المفاهيم الأساسية والاستيعاب', fontSize: 16, bold: true, color: '#ffffff', textAlign: 'center'
+            },
+            {
+              id: state.nextId++, type: 'text', x: 105, y: 398, width: 690, height: 50,
+              text: 'فهم المصطلحات، القراءة الصحيحة للبيانات، واستيعاب أدوات المنصة الرقمية.', fontSize: 12, color: '#d1fae5', textAlign: 'center'
+            }
+          ]
+        }
+      ];
+
+      smartArtTypes.forEach(art => {
+        const card = document.createElement('div');
+        card.className = 'template-card';
+        card.style.position = 'relative';
+        card.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h4 style="margin:0;">${art.title}</h4>
+            <span style="font-size:0.68rem; background:rgba(0,196,204,0.18); color:#00c4cc; padding:2px 8px; border-radius:10px; font-weight:bold;">${art.badge}</span>
+          </div>
+          <p style="margin:0;">${art.desc}</p>
+        `;
+        card.addEventListener('click', () => {
+          saveHistory();
+          state.items = art.builder();
+          renderAll();
+          deselectAll();
+          completeLabTask('task1');
+          showToast(`تم إدراج مخطط سمارت آرت: ${art.title}`);
+        });
+        drawerContent.appendChild(card);
+      });
+    }
+
+    // Drawer 4: Styles / Palettes
+    function renderStylesDrawer() {
+      // Background Color Section in Styles Drawer
+      const bgSection = document.createElement('div');
+      bgSection.style.marginBottom = '16px';
+      bgSection.innerHTML = `
+        <h5 style="color:#d1d5db; font-size:0.8rem; margin-bottom:8px;">لون خلفية مساحة العمل</h5>
+        <div style="display:flex; align-items:center; gap:10px; background:#25262c; padding:10px; border-radius:8px; border:1px solid #373a40;">
+          <input type="color" id="drawerBgPicker" value="${state.canvasBg}" style="width:34px; height:34px; border:none; border-radius:6px; cursor:pointer; background:transparent;">
+          <span style="font-size:0.8rem; color:#f1f2f6;">اختر لون مخصص للخلفية</span>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(6, 1fr); gap:6px; margin-top:8px;">
+          <button class="drawer-bg-preset" data-bg="#ffffff" style="background:#ffffff; height:26px; border-radius:4px; border:1px solid #475569; cursor:pointer;" title="أبيض"></button>
+          <button class="drawer-bg-preset" data-bg="#f8fafc" style="background:#f8fafc; height:26px; border-radius:4px; border:1px solid #475569; cursor:pointer;" title="رمادي خفيف"></button>
+          <button class="drawer-bg-preset" data-bg="#eff6ff" style="background:#eff6ff; height:26px; border-radius:4px; border:1px solid #475569; cursor:pointer;" title="أزرق خفيف"></button>
+          <button class="drawer-bg-preset" data-bg="#f0fdf4" style="background:#f0fdf4; height:26px; border-radius:4px; border:1px solid #475569; cursor:pointer;" title="نعناعي"></button>
+          <button class="drawer-bg-preset" data-bg="#fef3c7" style="background:#fef3c7; height:26px; border-radius:4px; border:1px solid #475569; cursor:pointer;" title="بيج دافئ"></button>
+          <button class="drawer-bg-preset" data-bg="#0f172a" style="background:#0f172a; height:26px; border-radius:4px; border:1px solid #475569; cursor:pointer;" title="داكن"></button>
+        </div>
+      `;
+      drawerContent.appendChild(bgSection);
+
+      const drawerBgPicker = bgSection.querySelector('#drawerBgPicker');
+      drawerBgPicker.addEventListener('input', () => {
+        applyCanvasBg(drawerBgPicker.value, false);
+      });
+      drawerBgPicker.addEventListener('change', () => {
+        applyCanvasBg(drawerBgPicker.value, true);
+      });
+
+      bgSection.querySelectorAll('.drawer-bg-preset').forEach(btn => {
+        btn.addEventListener('click', () => {
+          applyCanvasBg(btn.dataset.bg, true);
+          drawerBgPicker.value = btn.dataset.bg;
+        });
+      });
+
+      const pTitle = document.createElement('h5');
+      pTitle.style.cssText = 'color:#d1d5db; font-size:0.8rem; margin-bottom:8px;';
+      pTitle.textContent = 'لوحات ألوان المخططات البيانية';
+      drawerContent.appendChild(pTitle);
+
+      const pContainer = document.createElement('div');
+      pContainer.className = 'palette-list';
+
+      Object.entries(PALETTES).forEach(([key, pal]) => {
+        const box = document.createElement('div');
+        box.className = 'palette-box';
+        box.innerHTML = `
+          <h5>${pal.name}</h5>
+          <div class="palette-swatches">
+            ${pal.colors.map(c => `<div class="palette-swatch" style="background:${c}"></div>`).join('')}
+          </div>
+        `;
+        box.addEventListener('click', () => {
+          const selected = state.items.find(it => it.id === state.selectedId);
+          if (selected && selected.type === 'chart') {
+            saveHistory();
+            selected.palette = key;
+            renderItemChart(selected);
+            chartPaletteSelect.value = key;
+            completeLabTask('task3');
+            showToast(`تم تطبيق لوحة: ${pal.name}`);
+          } else {
+            // Apply to all charts
+            saveHistory();
+            let applied = false;
+            state.items.forEach(it => {
+              if (it.type === 'chart') {
+                it.palette = key;
+                applied = true;
+              }
+            });
+            if (applied) {
+              renderAll();
+              completeLabTask('task3');
+              showToast(`تم تطبيق لوحة ${pal.name} على كافة المخططات`);
+            } else {
+              showToast('حدد مخططاً أولاً أو أضف مخططاً لتطبيق الألوان عليه');
+            }
+          }
+        });
+        pContainer.appendChild(box);
+      });
+
+      drawerContent.appendChild(pContainer);
+    }
+
+    // --- Offline High-Resolution PNG Export (Pure HTML5 Canvas) ---
+    document.getElementById('btnExportPng').addEventListener('click', () => {
+      exportCanvasToPng();
+    });
+
+    function exportCanvasToPng() {
+      deselectAll();
+      showToast('جاري معالجة وتصدير التصميم بجودة عالية...');
+
+      const scale = 2; // 2x Retina resolution: 1800 x 1200
+      const width = 900;
+      const height = 600;
+
+      const canvas = document.getElementById('exportCanvas');
+      canvas.width = width * scale;
+      canvas.height = height * scale;
+      const ctx = canvas.getContext('2d');
+
+      ctx.save();
+      ctx.scale(scale, scale);
+
+      // Background
+      ctx.fillStyle = state.canvasBg || '#ffffff';
+      ctx.fillRect(0, 0, width, height);
+
+      // Render elements in z-order
+      const sortedItems = [...state.items].sort((a, b) => (a.zIndex || 1) - (b.zIndex || 1));
+
+      let pending = sortedItems.length;
+      if (pending === 0) {
+        downloadCanvasImage(canvas);
+        return;
+      }
+
+      function checkDone() {
+        pending--;
+        if (pending <= 0) {
+          ctx.restore();
+          downloadCanvasImage(canvas);
+        }
+      }
+
+      sortedItems.forEach(item => {
+        if (item.type === 'chart') {
+          const svgString = generateChartSVG(item);
+          drawSvgToCanvas(ctx, svgString, item.x, item.y, item.width, item.height, checkDone);
+        } else if (item.type === 'shape') {
+          const coloredSvg = item.svg.replace('currentColor', item.color || '#7d2ae8');
+          drawSvgToCanvas(ctx, coloredSvg, item.x, item.y, item.width, item.height, checkDone);
+        } else if (item.type === 'text') {
+          drawTextToCanvas(ctx, item);
+          checkDone();
+        } else {
+          checkDone();
+        }
+      });
+    }
+
+    function drawTextToCanvas(ctx, item) {
+      ctx.save();
+      const fontSize = item.fontSize || 24;
+      const fontStyle = item.italic ? 'italic ' : '';
+      const fontWeight = item.bold ? 'bold ' : 'normal ';
+      const fontFamily = item.fontFamily === 'inherit' ? '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Cairo", Tahoma, sans-serif' : item.fontFamily;
+
+      ctx.font = `${fontStyle}${fontWeight}${fontSize}px ${fontFamily}`;
+      ctx.fillStyle = item.color || '#000000';
+      ctx.textBaseline = 'top';
+      ctx.direction = 'rtl';
+
+      const align = item.textAlign || 'right';
+      let textX = item.x;
+      if (align === 'right') {
+        textX = item.x + item.width;
+        ctx.textAlign = 'right';
+      } else if (align === 'center') {
+        textX = item.x + item.width / 2;
+        ctx.textAlign = 'center';
+      } else {
+        textX = item.x;
+        ctx.textAlign = 'left';
+      }
+
+      // Simple word wrap
+      const words = item.text.split(' ');
+      let line = '';
+      let y = item.y + 4;
+      const lineHeight = fontSize * 1.35;
+
+      for (let n = 0; n < words.length; n++) {
+        const testLine = line + words[n] + ' ';
+        const metrics = ctx.measureText(testLine);
+        if (metrics.width > item.width && n > 0) {
+          ctx.fillText(line, textX, y);
+          line = words[n] + ' ';
+          y += lineHeight;
+        } else {
+          line = testLine;
+        }
+      }
+      ctx.fillText(line, textX, y);
+      ctx.restore();
+    }
+
+    function drawSvgToCanvas(ctx, svgString, x, y, width, height, callback) {
+      const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+      const URL = window.URL || window.webkitURL || window;
+      const blobURL = URL.createObjectURL(blob);
+      const img = new Image();
+
+      img.onload = () => {
+        ctx.drawImage(img, x, y, width, height);
+        URL.revokeObjectURL(blobURL);
+        callback();
+      };
+      img.onerror = () => {
+        URL.revokeObjectURL(blobURL);
+        callback();
+      };
+      img.src = blobURL;
+    }
+
+    function downloadCanvasImage(canvas) {
+      try {
+        const link = document.createElement('a');
+        const projTitle = (document.getElementById('projectTitle').value || 'infographic-design').trim().replace(/\s+/g, '_');
+        link.download = `${projTitle}.png`;
+        link.href = canvas.toDataURL('image/png');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        completeLabTask('task5');
+        showToast('✅ تم تنزيل صورة التصميم بنجاح وبدون إنترنت!');
+      } catch (err) {
+        showToast('تعذر تنزيل الصورة تلقائياً، يرجى المحاولة ثانية');
+      }
+    }
+
+    // --- Initialization ---
+    function init() {
+      renderDrawerContent();
+      // Load initial default template (Sales Report)
+      TEMPLATES_DATA[0].load();
+      renderAll();
+      updateToolbarContext();
+      saveHistory();
+    }
+
+    init();
+  </script>
+</body>
+</html>
+
