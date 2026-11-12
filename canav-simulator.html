@@ -761,6 +761,31 @@
       background: #10b981;
       box-shadow: 0 0 6px #10b981;
     }
+    .dev-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.76rem;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      padding: 4px 10px;
+      border-radius: 20px;
+      color: rgba(255, 255, 255, 0.9);
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .dev-badge:hover {
+      background: rgba(255, 255, 255, 0.28);
+      color: #ffffff;
+      border-color: rgba(255, 255, 255, 0.5);
+      transform: translateY(-1px);
+    }
+    .dev-badge a {
+      color: #ffffff;
+      font-weight: 700;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
   </style>
 </head>
 <body>
@@ -804,6 +829,13 @@
     </div>
 
     <div class="header-right">
+      <div class="dev-badge" title="تواصل مع المطور عبر البريد الإلكتروني">
+        <span>تطوير:</span>
+        <a href="mailto:w.a.a2012@gmail.com" style="color:#ffffff; font-weight:bold; text-decoration:none; display:inline-flex; align-items:center; gap:4px;">
+          <span>عبدالرزاق المعلوي</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </a>
+      </div>
       <button class="btn-header primary" id="btnExportPng">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         <span>تنزيل (Download PNG)</span>
