@@ -3154,21 +3154,48 @@
     }
 
     function drawSvgToCanvas(ctx, svgString, x, y, width, height, callback) {
-      const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
-      const URL = window.URL || window.webkitURL || window;
-      const blobURL = URL.createObjectURL(blob);
+      // Ensure SVG has proper XML namespace and dimensions for <img> rendering
+      let cleanSvg = svgString.trim();
+      if (!cleanSvg.includes('xmlns=')) {
+        cleanSvg = cleanSvg.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"');
+      }
+      // Ensure width and height attributes exist on the root <svg>
+      if (!cleanSvg.match(/<svg[^>]*\s(width)=/i)) {
+        cleanSvg = cleanSvg.replace('<svg', `<svg width="${width}" height="${height}"`);
+      }
+
       const img = new Image();
+      img.crossOrigin = 'anonymous';
 
       img.onload = () => {
         ctx.drawImage(img, x, y, width, height);
-        URL.revokeObjectURL(blobURL);
         callback();
       };
-      img.onerror = () => {
-        URL.revokeObjectURL(blobURL);
-        callback();
+
+      img.onerror = (e) => {
+        // Fallback: try blob URL if data URI failed
+        try {
+          const blob = new Blob([cleanSvg], { type: 'image/svg+xml;charset=utf-8' });
+          const URL = window.URL || window.webkitURL || window;
+          const blobURL = URL.createObjectURL(blob);
+          const fallbackImg = new Image();
+          fallbackImg.onload = () => {
+            ctx.drawImage(fallbackImg, x, y, width, height);
+            URL.revokeObjectURL(blobURL);
+            callback();
+          };
+          fallbackImg.onerror = () => {
+            URL.revokeObjectURL(blobURL);
+            callback();
+          };
+          fallbackImg.src = blobURL;
+        } catch (err) {
+          callback();
+        }
       };
-      img.src = blobURL;
+
+      // Use UTF-8 Data URI directly (works 100% reliably in local file:// without Blob security restrictions)
+      img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(cleanSvg);
     }
 
     function downloadCanvasImage(canvas) {

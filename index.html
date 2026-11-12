@@ -777,18 +777,15 @@
           <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
           <path d="M2 12h20"/>
         </svg>
-        <span>إنفوجرافيك كانفا</span>
+        <span style="font-size: small;">إنفوجرافيك كانفا</span>
         <span class="brand-badge">معمل مدرسي</span>
       </div>
-      <div class="offline-tag">
-        <span class="offline-dot"></span>
-        <span>يعمل بدون إنترنت 100%</span>
-      </div>
+     
     </div>
 
     <div class="header-center">
       <button class="btn-header" id="btnNewBlankProject" style="background: rgba(255,255,255,0.22); border-color: rgba(255,255,255,0.4);" title="البدء بمشروع وتصميم فارغ جديد">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <svg width="12" height="12" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         <span>مشروع فارغ (New Blank)</span>
       </button>
       <div class="toolbar-divider" style="background: rgba(255,255,255,0.25);"></div>
@@ -3157,21 +3154,48 @@
     }
 
     function drawSvgToCanvas(ctx, svgString, x, y, width, height, callback) {
-      const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
-      const URL = window.URL || window.webkitURL || window;
-      const blobURL = URL.createObjectURL(blob);
+      // Ensure SVG has proper XML namespace and dimensions for <img> rendering
+      let cleanSvg = svgString.trim();
+      if (!cleanSvg.includes('xmlns=')) {
+        cleanSvg = cleanSvg.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"');
+      }
+      // Ensure width and height attributes exist on the root <svg>
+      if (!cleanSvg.match(/<svg[^>]*\s(width)=/i)) {
+        cleanSvg = cleanSvg.replace('<svg', `<svg width="${width}" height="${height}"`);
+      }
+
       const img = new Image();
+      img.crossOrigin = 'anonymous';
 
       img.onload = () => {
         ctx.drawImage(img, x, y, width, height);
-        URL.revokeObjectURL(blobURL);
         callback();
       };
-      img.onerror = () => {
-        URL.revokeObjectURL(blobURL);
-        callback();
+
+      img.onerror = (e) => {
+        // Fallback: try blob URL if data URI failed
+        try {
+          const blob = new Blob([cleanSvg], { type: 'image/svg+xml;charset=utf-8' });
+          const URL = window.URL || window.webkitURL || window;
+          const blobURL = URL.createObjectURL(blob);
+          const fallbackImg = new Image();
+          fallbackImg.onload = () => {
+            ctx.drawImage(fallbackImg, x, y, width, height);
+            URL.revokeObjectURL(blobURL);
+            callback();
+          };
+          fallbackImg.onerror = () => {
+            URL.revokeObjectURL(blobURL);
+            callback();
+          };
+          fallbackImg.src = blobURL;
+        } catch (err) {
+          callback();
+        }
       };
-      img.src = blobURL;
+
+      // Use UTF-8 Data URI directly (works 100% reliably in local file:// without Blob security restrictions)
+      img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(cleanSvg);
     }
 
     function downloadCanvasImage(canvas) {
