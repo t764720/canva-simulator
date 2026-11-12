@@ -905,12 +905,24 @@
       <div class="toolbar-divider"></div>
       <span style="font-weight: 600; color: var(--text-main);">لون خلفية اللوحة:</span>
       <input type="color" class="tool-color-picker" id="canvasBgPicker" value="#ffffff" title="اختيار لون خلفية لوحة التصميم">
-      <div style="display: flex; gap: 4px; align-items: center;">
+      <div style="display: flex; gap: 4px; align-items: center; flex-wrap: wrap;">
         <button class="bg-preset-dot" data-bg="#ffffff" style="background:#ffffff; width:18px; height:18px; border-radius:50%; border:1px solid #cbd5e1; cursor:pointer;" title="أبيض"></button>
         <button class="bg-preset-dot" data-bg="#f8fafc" style="background:#f8fafc; width:18px; height:18px; border-radius:50%; border:1px solid #cbd5e1; cursor:pointer;" title="رمادي خفيف"></button>
+        <button class="bg-preset-dot" data-bg="#f1f5f9" style="background:#f1f5f9; width:18px; height:18px; border-radius:50%; border:1px solid #cbd5e1; cursor:pointer;" title="فضي فاتح"></button>
+        <button class="bg-preset-dot" data-bg="#e2e8f0" style="background:#e2e8f0; width:18px; height:18px; border-radius:50%; border:1px solid #94a3b8; cursor:pointer;" title="رمادي متوسط"></button>
         <button class="bg-preset-dot" data-bg="#f0f9ff" style="background:#f0f9ff; width:18px; height:18px; border-radius:50%; border:1px solid #bae6fd; cursor:pointer;" title="أزرق ثلجي"></button>
-        <button class="bg-preset-dot" data-bg="#fdf4ff" style="background:#fdf4ff; width:18px; height:18px; border-radius:50%; border:1px solid #f5d0fe; cursor:pointer;" title="زهري فاتح"></button>
+        <button class="bg-preset-dot" data-bg="#e0f2fe" style="background:#e0f2fe; width:18px; height:18px; border-radius:50%; border:1px solid #7dd3fc; cursor:pointer;" title="أزرق سماوي ناعم"></button>
+        <button class="bg-preset-dot" data-bg="#dbeafe" style="background:#dbeafe; width:18px; height:18px; border-radius:50%; border:1px solid #93c5fd; cursor:pointer;" title="أزرق هادئ"></button>
         <button class="bg-preset-dot" data-bg="#f0fdf4" style="background:#f0fdf4; width:18px; height:18px; border-radius:50%; border:1px solid #bbf7d0; cursor:pointer;" title="نعناعي خفيف"></button>
+        <button class="bg-preset-dot" data-bg="#dcfce7" style="background:#dcfce7; width:18px; height:18px; border-radius:50%; border:1px solid #86efac; cursor:pointer;" title="أخضر باستيل"></button>
+        <button class="bg-preset-dot" data-bg="#ecfeff" style="background:#ecfeff; width:18px; height:18px; border-radius:50%; border:1px solid #a5f3fc; cursor:pointer;" title="فيروزي فاتح"></button>
+        <button class="bg-preset-dot" data-bg="#fefce8" style="background:#fefce8; width:18px; height:18px; border-radius:50%; border:1px solid #fef08a; cursor:pointer;" title="أصفر ليموني ناعم"></button>
+        <button class="bg-preset-dot" data-bg="#fef3c7" style="background:#fef3c7; width:18px; height:18px; border-radius:50%; border:1px solid #fde68a; cursor:pointer;" title="بيج كريمي دافئ"></button>
+        <button class="bg-preset-dot" data-bg="#fff7ed" style="background:#fff7ed; width:18px; height:18px; border-radius:50%; border:1px solid #fed7aa; cursor:pointer;" title="خوخي هادئ"></button>
+        <button class="bg-preset-dot" data-bg="#fdf4ff" style="background:#fdf4ff; width:18px; height:18px; border-radius:50%; border:1px solid #f5d0fe; cursor:pointer;" title="زهري فاتح"></button>
+        <button class="bg-preset-dot" data-bg="#fae8ff" style="background:#fae8ff; width:18px; height:18px; border-radius:50%; border:1px solid #f0abfc; cursor:pointer;" title="وردي بنفسجي"></button>
+        <button class="bg-preset-dot" data-bg="#f3e8ff" style="background:#f3e8ff; width:18px; height:18px; border-radius:50%; border:1px solid #d8b4fe; cursor:pointer;" title="لافندر ناعم"></button>
+        <button class="bg-preset-dot" data-bg="#1e293b" style="background:#1e293b; width:18px; height:18px; border-radius:50%; border:1px solid #475569; cursor:pointer;" title="كحلي رمادي"></button>
         <button class="bg-preset-dot" data-bg="#0f172a" style="background:#0f172a; width:18px; height:18px; border-radius:50%; border:1px solid #334155; cursor:pointer;" title="ليلي داكن"></button>
       </div>
     </div>
@@ -3071,10 +3083,22 @@
         <div style="display:grid; grid-template-columns:repeat(6, 1fr); gap:6px; margin-top:8px;">
           <button class="drawer-bg-preset" data-bg="#ffffff" style="background:#ffffff; height:26px; border-radius:4px; border:1px solid #475569; cursor:pointer;" title="أبيض"></button>
           <button class="drawer-bg-preset" data-bg="#f8fafc" style="background:#f8fafc; height:26px; border-radius:4px; border:1px solid #475569; cursor:pointer;" title="رمادي خفيف"></button>
-          <button class="drawer-bg-preset" data-bg="#eff6ff" style="background:#eff6ff; height:26px; border-radius:4px; border:1px solid #475569; cursor:pointer;" title="أزرق خفيف"></button>
-          <button class="drawer-bg-preset" data-bg="#f0fdf4" style="background:#f0fdf4; height:26px; border-radius:4px; border:1px solid #475569; cursor:pointer;" title="نعناعي"></button>
+          <button class="drawer-bg-preset" data-bg="#f1f5f9" style="background:#f1f5f9; height:26px; border-radius:4px; border:1px solid #475569; cursor:pointer;" title="فضي فاتح"></button>
+          <button class="drawer-bg-preset" data-bg="#e2e8f0" style="background:#e2e8f0; height:26px; border-radius:4px; border:1px solid #475569; cursor:pointer;" title="رمادي متوسط"></button>
+          <button class="drawer-bg-preset" data-bg="#f0f9ff" style="background:#f0f9ff; height:26px; border-radius:4px; border:1px solid #475569; cursor:pointer;" title="أزرق ثلجي"></button>
+          <button class="drawer-bg-preset" data-bg="#e0f2fe" style="background:#e0f2fe; height:26px; border-radius:4px; border:1px solid #475569; cursor:pointer;" title="أزرق سماوي"></button>
+          <button class="drawer-bg-preset" data-bg="#dbeafe" style="background:#dbeafe; height:26px; border-radius:4px; border:1px solid #475569; cursor:pointer;" title="أزرق هادئ"></button>
+          <button class="drawer-bg-preset" data-bg="#f0fdf4" style="background:#f0fdf4; height:26px; border-radius:4px; border:1px solid #475569; cursor:pointer;" title="نعناعي خفيف"></button>
+          <button class="drawer-bg-preset" data-bg="#dcfce7" style="background:#dcfce7; height:26px; border-radius:4px; border:1px solid #475569; cursor:pointer;" title="أخضر باستيل"></button>
+          <button class="drawer-bg-preset" data-bg="#ecfeff" style="background:#ecfeff; height:26px; border-radius:4px; border:1px solid #475569; cursor:pointer;" title="فيروزي فاتح"></button>
+          <button class="drawer-bg-preset" data-bg="#fefce8" style="background:#fefce8; height:26px; border-radius:4px; border:1px solid #475569; cursor:pointer;" title="أصفر ليموني"></button>
           <button class="drawer-bg-preset" data-bg="#fef3c7" style="background:#fef3c7; height:26px; border-radius:4px; border:1px solid #475569; cursor:pointer;" title="بيج دافئ"></button>
-          <button class="drawer-bg-preset" data-bg="#0f172a" style="background:#0f172a; height:26px; border-radius:4px; border:1px solid #475569; cursor:pointer;" title="داكن"></button>
+          <button class="drawer-bg-preset" data-bg="#fff7ed" style="background:#fff7ed; height:26px; border-radius:4px; border:1px solid #475569; cursor:pointer;" title="خوخي هادئ"></button>
+          <button class="drawer-bg-preset" data-bg="#fdf4ff" style="background:#fdf4ff; height:26px; border-radius:4px; border:1px solid #475569; cursor:pointer;" title="زهري فاتح"></button>
+          <button class="drawer-bg-preset" data-bg="#fae8ff" style="background:#fae8ff; height:26px; border-radius:4px; border:1px solid #475569; cursor:pointer;" title="وردي بنفسجي"></button>
+          <button class="drawer-bg-preset" data-bg="#f3e8ff" style="background:#f3e8ff; height:26px; border-radius:4px; border:1px solid #475569; cursor:pointer;" title="لافندر ناعم"></button>
+          <button class="drawer-bg-preset" data-bg="#1e293b" style="background:#1e293b; height:26px; border-radius:4px; border:1px solid #475569; cursor:pointer;" title="كحلي رمادي"></button>
+          <button class="drawer-bg-preset" data-bg="#0f172a" style="background:#0f172a; height:26px; border-radius:4px; border:1px solid #475569; cursor:pointer;" title="ليلي داكن"></button>
         </div>
       `;
       drawerContent.appendChild(bgSection);
